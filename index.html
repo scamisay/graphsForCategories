@@ -1,0 +1,5119 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.link {
+  fill: none;
+  stroke: #666;
+  stroke-width: 1.5px;
+}
+
+#licensing {
+  fill: green;
+}
+
+.link.licensing {
+  stroke: green;
+}
+
+.link.resolved {
+  stroke-dasharray: 0,2 1;
+}
+
+circle {
+  fill: #ccc;
+  stroke: #333;
+  stroke-width: 1.5px;
+}
+
+text {
+  font: 10px sans-serif;
+  pointer-events: none;
+  text-shadow: 0 1px 0 #fff, 1px 0 0 #fff, 0 -1px 0 #fff, -1px 0 0 #fff;
+}
+
+</style>
+<body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.16/d3.min.js"></script>
+<script>
+
+// http://blog.thomsonreuters.com/index.php/mobile-patent-suits-graphic-of-the-day/
+var links =  [
+    {
+      source : "0 - NULL",
+      target : "1 - ZonaJobs Educacion",
+      type: "licensing"
+    },
+    {
+      source : "116 - Global",
+      target : "2 - Notas",
+      type: "licensing"
+    },
+    {
+      source : "116 - Global",
+      target : "3 - Fotos",
+      type: "licensing"
+    },
+    {
+      source : "116 - Global",
+      target : "44 - Nivel",
+      type: "licensing"
+    },
+    {
+      source : "41 - Modalidad",
+      target : "42 - Presencial",
+      type: "licensing"
+    },
+    {
+      source : "3 - Fotos",
+      target : "11 - Articulos",
+      type: "licensing"
+    },
+    {
+      source : "116 - Global",
+      target : "15 - Documentos",
+      type: "licensing"
+    },
+    {
+      source : "15 - Documentos",
+      target : "16 - Informe",
+      type: "licensing"
+    },
+    {
+      source : "15 - Documentos",
+      target : "18 - Gráfico",
+      type: "licensing"
+    },
+    {
+      source : "3 - Fotos",
+      target : "19 - Universidades",
+      type: "licensing"
+    },
+    {
+      source : "3 - Fotos",
+      target : "25 - Pagina",
+      type: "licensing"
+    },
+    {
+      source : "20 - NULL",
+      target : "27 - Música",
+      type: "licensing"
+    },
+    {
+      source : "20 - NULL",
+      target : "28 - Cine y Tv",
+      type: "licensing"
+    },
+    {
+      source : "44 - Nivel",
+      target : "46 - Curso",
+      type: "licensing"
+    },
+    {
+      source : "41 - Modalidad",
+      target : "43 - A distancia",
+      type: "licensing"
+    },
+    {
+      source : "30 - NULL",
+      target : "31 - Video Clip",
+      type: "licensing"
+    },
+    {
+      source : "30 - NULL",
+      target : "32 - Entrevista",
+      type: "licensing"
+    },
+    {
+      source : "116 - Global",
+      target : "41 - Modalidad",
+      type: "licensing"
+    },
+    {
+      source : "6 - NULL",
+      target : "34 - Futbol",
+      type: "licensing"
+    },
+    {
+      source : "6 - NULL",
+      target : "35 - Tenis",
+      type: "licensing"
+    },
+    {
+      source : "6 - NULL",
+      target : "36 - Automovilismo",
+      type: "licensing"
+    },
+    {
+      source : "44 - Nivel",
+      target : "45 - Carreras y Terciarios",
+      type: "licensing"
+    },
+    {
+      source : "44 - Nivel",
+      target : "47 - Posgrados y Maestrías",
+      type: "licensing"
+    },
+    {
+      source : "111 - Categorias de Carreras",
+      target : "49 - Carreras",
+      type: "licensing"
+    },
+    {
+      source : "58 - NULL",
+      target : "50 - Abogacía / Derecho / Abogado",
+      type: "licensing"
+    },
+    {
+      source : "58 - NULL",
+      target : "51 - Asesor de Imagen",
+      type: "licensing"
+    },
+    {
+      source : "58 - NULL",
+      target : "52 - Aviación",
+      type: "licensing"
+    },
+    {
+      source : "58 - NULL",
+      target : "53 - Azafata",
+      type: "licensing"
+    },
+    {
+      source : "58 - NULL",
+      target : "54 - Calígrafo Público",
+      type: "licensing"
+    },
+    {
+      source : "58 - NULL",
+      target : "55 - Ciencias Aplicadas",
+      type: "licensing"
+    },
+    {
+      source : "58 - NULL",
+      target : "56 - Ciencias de la Comunicación",
+      type: "licensing"
+    },
+    {
+      source : "58 - NULL",
+      target : "57 - Recursos Humanos",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "542 - Programas Empresariales",
+      type: "licensing"
+    },
+    {
+      source : "58 - NULL",
+      target : "59 - Turismo",
+      type: "licensing"
+    },
+    {
+      source : "58 - NULL",
+      target : "60 - Traductor Público",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "562 - Ingeniería y Tecnología",
+      type: "licensing"
+    },
+    {
+      source : "61 - NULL",
+      target : "62 - Administración Agraría",
+      type: "licensing"
+    },
+    {
+      source : "61 - NULL",
+      target : "63 - Administración Bancaria",
+      type: "licensing"
+    },
+    {
+      source : "61 - NULL",
+      target : "64 - Administración de Consorcio",
+      type: "licensing"
+    },
+    {
+      source : "61 - NULL",
+      target : "65 - Administración de Empresas",
+      type: "licensing"
+    },
+    {
+      source : "542 - Programas Empresariales",
+      target : "569 - Dirección Seguridad",
+      type: "licensing"
+    },
+    {
+      source : "66 - NULL",
+      target : "67 - Arquitectura",
+      type: "licensing"
+    },
+    {
+      source : "572 - Riesgos Laborales",
+      target : "573 - Gestión de Calidad en Riesgos Laborales",
+      type: "licensing"
+    },
+    {
+      source : "552 - Ingeniería y Tecnología",
+      target : "553 - Electricidad, Electrónica, Informática",
+      type: "licensing"
+    },
+    {
+      source : "542 - Programas Empresariales",
+      target : "543 - Dirección y Administración de Proyectos",
+      type: "licensing"
+    },
+    {
+      source : "76 - NULL",
+      target : "77 - Carreras de arte",
+      type: "licensing"
+    },
+    {
+      source : "72 - NULL",
+      target : "78 - Literatura",
+      type: "licensing"
+    },
+    {
+      source : "72 - NULL",
+      target : "79 - Filosofía",
+      type: "licensing"
+    },
+    {
+      source : "73 - NULL",
+      target : "80 - Sommelier",
+      type: "licensing"
+    },
+    {
+      source : "73 - NULL",
+      target : "81 - Chef",
+      type: "licensing"
+    },
+    {
+      source : "74 - NULL",
+      target : "82 - Enfermería",
+      type: "licensing"
+    },
+    {
+      source : "74 - NULL",
+      target : "83 - Odontología",
+      type: "licensing"
+    },
+    {
+      source : "74 - NULL",
+      target : "84 - Podología",
+      type: "licensing"
+    },
+    {
+      source : "71 - NULL",
+      target : "85 - Ingeniería Agroindustrial",
+      type: "licensing"
+    },
+    {
+      source : "71 - NULL",
+      target : "86 - Ingeniería en Sistemas",
+      type: "licensing"
+    },
+    {
+      source : "71 - NULL",
+      target : "87 - Ingeniería Civil",
+      type: "licensing"
+    },
+    {
+      source : "71 - NULL",
+      target : "88 - Ingeniería Electrónica",
+      type: "licensing"
+    },
+    {
+      source : "75 - NULL",
+      target : "89 - Optica",
+      type: "licensing"
+    },
+    {
+      source : "75 - NULL",
+      target : "90 - Floricultura",
+      type: "licensing"
+    },
+    {
+      source : "76 - NULL",
+      target : "91 - Músico",
+      type: "licensing"
+    },
+    {
+      source : "76 - NULL",
+      target : "92 - Cinematografía",
+      type: "licensing"
+    },
+    {
+      source : "61 - NULL",
+      target : "97 - Contador Público",
+      type: "licensing"
+    },
+    {
+      source : "2 - Notas",
+      target : "103 - Orientación vocacional",
+      type: "licensing"
+    },
+    {
+      source : "2 - Notas",
+      target : "104 - Carreras/Terciarios",
+      type: "licensing"
+    },
+    {
+      source : "2 - Notas",
+      target : "105 - Cursos",
+      type: "licensing"
+    },
+    {
+      source : "2 - Notas",
+      target : "106 - Posgrados",
+      type: "licensing"
+    },
+    {
+      source : "111 - Categorias de Carreras",
+      target : "107 - Cursos",
+      type: "licensing"
+    },
+    {
+      source : "1 - ZonaJobs Educacion",
+      target : "111 - Categorias de Carreras",
+      type: "licensing"
+    },
+    {
+      source : "1 - ZonaJobs Educacion",
+      target : "116 - Global",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "572 - Riesgos Laborales",
+      type: "licensing"
+    },
+    {
+      source : "117 - NULL",
+      target : "118 - Política Pública",
+      type: "licensing"
+    },
+    {
+      source : "117 - NULL",
+      target : "119 - Trabajo Social",
+      type: "licensing"
+    },
+    {
+      source : "117 - NULL",
+      target : "120 - Seguridad Social",
+      type: "licensing"
+    },
+    {
+      source : "117 - NULL",
+      target : "121 - Gobierno",
+      type: "licensing"
+    },
+    {
+      source : "122 - NULL",
+      target : "123 - Actuación",
+      type: "licensing"
+    },
+    {
+      source : "122 - NULL",
+      target : "124 - Arte Fotográfico",
+      type: "licensing"
+    },
+    {
+      source : "122 - NULL",
+      target : "125 - Danza",
+      type: "licensing"
+    },
+    {
+      source : "122 - NULL",
+      target : "126 - Diseño",
+      type: "licensing"
+    },
+    {
+      source : "127 - NULL",
+      target : "128 - Gestión de Calidad",
+      type: "licensing"
+    },
+    {
+      source : "540 - Hotelería y Turismo",
+      target : "541 - Dirección y Gestión de Empresas Turísticas",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "540 - Hotelería y Turismo",
+      type: "licensing"
+    },
+    {
+      source : "130 - NULL",
+      target : "131 - Bioingeniería",
+      type: "licensing"
+    },
+    {
+      source : "130 - NULL",
+      target : "132 - Biología",
+      type: "licensing"
+    },
+    {
+      source : "130 - NULL",
+      target : "133 - Biotecnología",
+      type: "licensing"
+    },
+    {
+      source : "130 - NULL",
+      target : "134 - Botánica",
+      type: "licensing"
+    },
+    {
+      source : "130 - NULL",
+      target : "135 - Ciencia Medio Ambiental",
+      type: "licensing"
+    },
+    {
+      source : "538 - Ingeniería y Tecnología",
+      target : "539 - Construcción",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "538 - Ingeniería y Tecnología",
+      type: "licensing"
+    },
+    {
+      source : "536 - Programas Empresariales",
+      target : "537 - Económicas",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "536 - Programas Empresariales",
+      type: "licensing"
+    },
+    {
+      source : "129 - NULL",
+      target : "142 - Ciencias Agrícolas",
+      type: "licensing"
+    },
+    {
+      source : "129 - NULL",
+      target : "143 - Ciencias Agronómicas",
+      type: "licensing"
+    },
+    {
+      source : "129 - NULL",
+      target : "144 - Ciencias Gastronómicas",
+      type: "licensing"
+    },
+    {
+      source : "129 - NULL",
+      target : "145 - Desarrollo de Tierras",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "571 - Producción Innovación y Calidad Industrial",
+      type: "licensing"
+    },
+    {
+      source : "111 - Categorias de Carreras",
+      target : "146 - Posgrados",
+      type: "licensing"
+    },
+    {
+      source : "111 - Categorias de Carreras",
+      target : "150 - Maestrías",
+      type: "licensing"
+    },
+    {
+      source : "562 - Ingeniería y Tecnología",
+      target : "563 - Ingeniería",
+      type: "licensing"
+    },
+    {
+      source : "156 - NULL",
+      target : "157 - Derecho Varios",
+      type: "licensing"
+    },
+    {
+      source : "548 - Educación Ejecutiva Programas Empresariales",
+      target : "549 - Educación Ejecutiva Logística",
+      type: "licensing"
+    },
+    {
+      source : "158 - NULL",
+      target : "160 - Comunicaciones",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "548 - Educación Ejecutiva Programas Empresariales",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "162 - Administración de Empresas",
+      type: "licensing"
+    },
+    {
+      source : "556 - Gestión Medio Ambiente",
+      target : "557 - Dirección y Gestión Del Medio Ambiente",
+      type: "licensing"
+    },
+    {
+      source : "163 - NULL",
+      target : "164 - Guía Turístico",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "554 - Programas Empresariales",
+      type: "licensing"
+    },
+    {
+      source : "165 - NULL",
+      target : "166 - Tecnología de la Información",
+      type: "licensing"
+    },
+    {
+      source : "165 - NULL",
+      target : "167 - Sistemas de Información",
+      type: "licensing"
+    },
+    {
+      source : "542 - Programas Empresariales",
+      target : "544 - Administracion de Negocios",
+      type: "licensing"
+    },
+    {
+      source : "168 - NULL",
+      target : "169 - Seguridad en el Trabajo",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "552 - Ingeniería y Tecnología",
+      type: "licensing"
+    },
+    {
+      source : "170 - NULL",
+      target : "171 - Mantenimiento Industrial",
+      type: "licensing"
+    },
+    {
+      source : "170 - NULL",
+      target : "172 - Ingeniería Mecánica",
+      type: "licensing"
+    },
+    {
+      source : "170 - NULL",
+      target : "173 - Ingeniería Industrial",
+      type: "licensing"
+    },
+    {
+      source : "170 - NULL",
+      target : "174 - Ingeniería Medio Ambiental",
+      type: "licensing"
+    },
+    {
+      source : "175 - NULL",
+      target : "176 - Alimentación",
+      type: "licensing"
+    },
+    {
+      source : "165 - NULL",
+      target : "177 - Programación",
+      type: "licensing"
+    },
+    {
+      source : "560 - Informática e Información",
+      target : "561 - Tecnología de la Información",
+      type: "licensing"
+    },
+    {
+      source : "178 - NULL",
+      target : "179 - Seguridad Civil",
+      type: "licensing"
+    },
+    {
+      source : "175 - NULL",
+      target : "180 - Enología",
+      type: "licensing"
+    },
+    {
+      source : "542 - Programas Empresariales",
+      target : "550 - Logística",
+      type: "licensing"
+    },
+    {
+      source : "181 - NULL",
+      target : "182 - Hostelería",
+      type: "licensing"
+    },
+    {
+      source : "183 - NULL",
+      target : "184 - Dirección y Gestión de Recursos Humanos",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "546 - Publicidad y Marketing",
+      type: "licensing"
+    },
+    {
+      source : "185 - NULL",
+      target : "186 - Marketing Estratégico",
+      type: "licensing"
+    },
+    {
+      source : "185 - NULL",
+      target : "187 - Organizador de Eventos",
+      type: "licensing"
+    },
+    {
+      source : "188 - NULL",
+      target : "189 - Estética",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "191 - Salud Pública",
+      type: "licensing"
+    },
+    {
+      source : "542 - Programas Empresariales",
+      target : "568 - Gestión de Pymes, Pequeñas y Medianas Empresas",
+      type: "licensing"
+    },
+    {
+      source : "192 - NULL",
+      target : "193 - Ciencias Gastronómicas",
+      type: "licensing"
+    },
+    {
+      source : "546 - Publicidad y Marketing",
+      target : "547 - Comercial y Ventas",
+      type: "licensing"
+    },
+    {
+      source : "194 - NULL",
+      target : "195 - Psicología - Forense",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "196 - Publicidad y Relaciones Públicas",
+      type: "licensing"
+    },
+    {
+      source : "194 - NULL",
+      target : "197 - Psicología - Todas",
+      type: "licensing"
+    },
+    {
+      source : "194 - NULL",
+      target : "198 - Psicopedagogía",
+      type: "licensing"
+    },
+    {
+      source : "158 - NULL",
+      target : "199 - Periodismo",
+      type: "licensing"
+    },
+    {
+      source : "165 - NULL",
+      target : "200 - Linux",
+      type: "licensing"
+    },
+    {
+      source : "165 - NULL",
+      target : "201 - Calidad, Seguridad Informática",
+      type: "licensing"
+    },
+    {
+      source : "165 - NULL",
+      target : "202 - Microsoft",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "203 - Dirección de Empresas y Negocios (Otros)",
+      type: "licensing"
+    },
+    {
+      source : "165 - NULL",
+      target : "204 - Analista de Sistemas",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "205 - Recursos Humanos",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "556 - Gestión Medio Ambiente",
+      type: "licensing"
+    },
+    {
+      source : "206 - NULL",
+      target : "207 - Radio",
+      type: "licensing"
+    },
+    {
+      source : "158 - NULL",
+      target : "208 - Radio, Televisión y Cinematografía",
+      type: "licensing"
+    },
+    {
+      source : "188 - NULL",
+      target : "209 - Dibujo - Ilustración",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "210 - Administracion de Negocios",
+      type: "licensing"
+    },
+    {
+      source : "536 - Programas Empresariales",
+      target : "564 - Telecomunicaciones",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "212 - Educación Física",
+      type: "licensing"
+    },
+    {
+      source : "536 - Programas Empresariales",
+      target : "566 - Dirección y Administración de Proyectos",
+      type: "licensing"
+    },
+    {
+      source : "213 - NULL",
+      target : "214 - Contabilidad",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "560 - Informática e Información",
+      type: "licensing"
+    },
+    {
+      source : "215 - NULL",
+      target : "216 - Química",
+      type: "licensing"
+    },
+    {
+      source : "188 - NULL",
+      target : "217 - Diseño Gráfico",
+      type: "licensing"
+    },
+    {
+      source : "218 - NULL",
+      target : "219 - Finanzas",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "220 - Telecomunicaciones",
+      type: "licensing"
+    },
+    {
+      source : "536 - Programas Empresariales",
+      target : "565 - Administración de Empresas",
+      type: "licensing"
+    },
+    {
+      source : "221 - NULL",
+      target : "222 - Criminología",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "223 - Gestión Pública",
+      type: "licensing"
+    },
+    {
+      source : "156 - NULL",
+      target : "224 - Abogacía y Práctica Jurídica",
+      type: "licensing"
+    },
+    {
+      source : "158 - NULL",
+      target : "225 - Locutor",
+      type: "licensing"
+    },
+    {
+      source : "226 - NULL",
+      target : "227 - Filosofía",
+      type: "licensing"
+    },
+    {
+      source : "156 - NULL",
+      target : "228 - Gestión de Cobros e Impagos",
+      type: "licensing"
+    },
+    {
+      source : "188 - NULL",
+      target : "229 - Historia Del Arte",
+      type: "licensing"
+    },
+    {
+      source : "188 - NULL",
+      target : "230 - Diseño de Moda",
+      type: "licensing"
+    },
+    {
+      source : "548 - Educación Ejecutiva Programas Empresariales",
+      target : "551 - Educación Ejecutiva Dirección y Administración de Proyectos",
+      type: "licensing"
+    },
+    {
+      source : "231 - NULL",
+      target : "232 - Moda",
+      type: "licensing"
+    },
+    {
+      source : "188 - NULL",
+      target : "233 - Diseño Industrial",
+      type: "licensing"
+    },
+    {
+      source : "188 - NULL",
+      target : "234 - Arte Fotográfico",
+      type: "licensing"
+    },
+    {
+      source : "170 - NULL",
+      target : "235 - Arquitectura",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "236 - Comercio Internacional",
+      type: "licensing"
+    },
+    {
+      source : "185 - NULL",
+      target : "237 - Comercial y Ventas",
+      type: "licensing"
+    },
+    {
+      source : "552 - Ingeniería y Tecnología",
+      target : "558 - Ingeniería Industrial",
+      type: "licensing"
+    },
+    {
+      source : "238 - NULL",
+      target : "239 - Dirección y Gestión Del Medio Ambiente",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "240 - Cirugía",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "241 - Física Médica y Radiología",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "242 - Ciencias de Laboratorio Clínico",
+      type: "licensing"
+    },
+    {
+      source : "226 - NULL",
+      target : "243 - Literatura",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "244 - Visitador Médico",
+      type: "licensing"
+    },
+    {
+      source : "163 - NULL",
+      target : "245 - Dirección y Gestión de Empresas Turísticas",
+      type: "licensing"
+    },
+    {
+      source : "188 - NULL",
+      target : "246 - Diseño de Interiores",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "247 - Logística",
+      type: "licensing"
+    },
+    {
+      source : "158 - NULL",
+      target : "248 - Ciencias de la Comunicación",
+      type: "licensing"
+    },
+    {
+      source : "185 - NULL",
+      target : "249 - Publicidad",
+      type: "licensing"
+    },
+    {
+      source : "188 - NULL",
+      target : "250 - Música",
+      type: "licensing"
+    },
+    {
+      source : "251 - NULL",
+      target : "252 - Biología",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "253 - Educación Infantil Guardería",
+      type: "licensing"
+    },
+    {
+      source : "226 - NULL",
+      target : "254 - Geografía y Cartografía",
+      type: "licensing"
+    },
+    {
+      source : "226 - NULL",
+      target : "255 - Historia",
+      type: "licensing"
+    },
+    {
+      source : "256 - NULL",
+      target : "257 - Inglés",
+      type: "licensing"
+    },
+    {
+      source : "258 - NULL",
+      target : "259 - Matemáticas, Matemáticas Aplicadas",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "260 - Educación Media / Educativa",
+      type: "licensing"
+    },
+    {
+      source : "226 - NULL",
+      target : "261 - LingüÍStica",
+      type: "licensing"
+    },
+    {
+      source : "256 - NULL",
+      target : "262 - Español Para Extranjeros",
+      type: "licensing"
+    },
+    {
+      source : "185 - NULL",
+      target : "263 - Relaciones Públicas",
+      type: "licensing"
+    },
+    {
+      source : "163 - NULL",
+      target : "264 - Hotelería",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "265 - Gestión de Pymes, Pequeñas y Medianas Empresas",
+      type: "licensing"
+    },
+    {
+      source : "165 - NULL",
+      target : "266 - Administrador de Sistemas",
+      type: "licensing"
+    },
+    {
+      source : "181 - NULL",
+      target : "267 - Camarero Barman",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "268 - Nutrición",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "269 - Marketing",
+      type: "licensing"
+    },
+    {
+      source : "270 - NULL",
+      target : "271 - Habilidades Personales - Pnl",
+      type: "licensing"
+    },
+    {
+      source : "270 - NULL",
+      target : "272 - Coaching Transformacional",
+      type: "licensing"
+    },
+    {
+      source : "256 - NULL",
+      target : "273 - Inglés Financiero",
+      type: "licensing"
+    },
+    {
+      source : "165 - NULL",
+      target : "274 - Internet",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "275 - Cardiología",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "276 - Neurología",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "277 - Secretaria / Auxiliar Administrativo",
+      type: "licensing"
+    },
+    {
+      source : "192 - NULL",
+      target : "278 - Ciencias Agrícolas",
+      type: "licensing"
+    },
+    {
+      source : "163 - NULL",
+      target : "279 - Turismo",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "280 - Fonoaudiología",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "281 - Kinesiología",
+      type: "licensing"
+    },
+    {
+      source : "156 - NULL",
+      target : "282 - Seguridad Nacional e Internacional",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "283 - Educación Elemental (k-7/8)",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "284 - Administración Educativa",
+      type: "licensing"
+    },
+    {
+      source : "226 - NULL",
+      target : "285 - Antropología",
+      type: "licensing"
+    },
+    {
+      source : "192 - NULL",
+      target : "286 - Ingeniería Agrícola",
+      type: "licensing"
+    },
+    {
+      source : "251 - NULL",
+      target : "287 - Bioingeniería",
+      type: "licensing"
+    },
+    {
+      source : "226 - NULL",
+      target : "288 - Política",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "570 - Salud y Medicina",
+      type: "licensing"
+    },
+    {
+      source : "289 - NULL",
+      target : "290 - Trabajo Social",
+      type: "licensing"
+    },
+    {
+      source : "238 - NULL",
+      target : "291 - Gestión de Residuos",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "292 - Finanzas Empresariales",
+      type: "licensing"
+    },
+    {
+      source : "194 - NULL",
+      target : "293 - Ciencias Sociales",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "294 - Enseñanza de Otros Temas",
+      type: "licensing"
+    },
+    {
+      source : "163 - NULL",
+      target : "295 - Gestión de Turismo Rural",
+      type: "licensing"
+    },
+    {
+      source : "170 - NULL",
+      target : "296 - Higiene Industrial",
+      type: "licensing"
+    },
+    {
+      source : "175 - NULL",
+      target : "297 - Jardinería",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "298 - Terapias Alternativas",
+      type: "licensing"
+    },
+    {
+      source : "170 - NULL",
+      target : "299 - Ingeniería Civil",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "300 - Enseñanza de Negocios (Educación)",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "301 - Enfermería",
+      type: "licensing"
+    },
+    {
+      source : "226 - NULL",
+      target : "302 - Bibliotecas",
+      type: "licensing"
+    },
+    {
+      source : "215 - NULL",
+      target : "303 - Bioquímica",
+      type: "licensing"
+    },
+    {
+      source : "170 - NULL",
+      target : "304 - Tecnología",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "305 - Económicas",
+      type: "licensing"
+    },
+    {
+      source : "175 - NULL",
+      target : "306 - Electricidad",
+      type: "licensing"
+    },
+    {
+      source : "175 - NULL",
+      target : "307 - Electrónica",
+      type: "licensing"
+    },
+    {
+      source : "215 - NULL",
+      target : "308 - Ciencia - Otras",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "309 - Ciencias Médicas",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "310 - Odontología",
+      type: "licensing"
+    },
+    {
+      source : "183 - NULL",
+      target : "311 - Relaciones Laborales",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "312 - Farmacología",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "313 - ÓPtica, Ciencias Oftalmológicas",
+      type: "licensing"
+    },
+    {
+      source : "170 - NULL",
+      target : "314 - Ingeniería Química",
+      type: "licensing"
+    },
+    {
+      source : "170 - NULL",
+      target : "315 - Automatización Industrial",
+      type: "licensing"
+    },
+    {
+      source : "251 - NULL",
+      target : "316 - Biotecnología",
+      type: "licensing"
+    },
+    {
+      source : "194 - NULL",
+      target : "317 - Sociología",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "318 - Educación Especial",
+      type: "licensing"
+    },
+    {
+      source : "319 - NULL",
+      target : "320 - Geología",
+      type: "licensing"
+    },
+    {
+      source : "256 - NULL",
+      target : "321 - Francés",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "322 - Terapia Física",
+      type: "licensing"
+    },
+    {
+      source : "251 - NULL",
+      target : "323 - Ciencia Medio Ambiental",
+      type: "licensing"
+    },
+    {
+      source : "170 - NULL",
+      target : "324 - Ingeniería Oceánica",
+      type: "licensing"
+    },
+    {
+      source : "319 - NULL",
+      target : "325 - Geofísica",
+      type: "licensing"
+    },
+    {
+      source : "188 - NULL",
+      target : "326 - Artes Visuales",
+      type: "licensing"
+    },
+    {
+      source : "251 - NULL",
+      target : "327 - Botánica",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "328 - Relaciones Internacionales",
+      type: "licensing"
+    },
+    {
+      source : "554 - Programas Empresariales",
+      target : "559 - Telecomunicaciones",
+      type: "licensing"
+    },
+    {
+      source : "329 - NULL",
+      target : "330 - Gestión Inmobiliaria",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "331 - Gerontología",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "332 - Educación Superior",
+      type: "licensing"
+    },
+    {
+      source : "238 - NULL",
+      target : "333 - Ciencia Del Medio Ambiente",
+      type: "licensing"
+    },
+    {
+      source : "218 - NULL",
+      target : "334 - Dirección y Gestión Bancaria",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "335 - Medicina",
+      type: "licensing"
+    },
+    {
+      source : "165 - NULL",
+      target : "336 - Redes Informáticas",
+      type: "licensing"
+    },
+    {
+      source : "165 - NULL",
+      target : "337 - Diseño Web",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "338 - Educación Secundaria",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "339 - Terapia de Rehabilitación",
+      type: "licensing"
+    },
+    {
+      source : "554 - Programas Empresariales",
+      target : "567 - Dirección y Administración de Proyectos",
+      type: "licensing"
+    },
+    {
+      source : "340 - NULL",
+      target : "341 - Química/Farmacia",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "342 - Enseñanza de Ciencias",
+      type: "licensing"
+    },
+    {
+      source : "188 - NULL",
+      target : "343 - Estudios Cinematográficos",
+      type: "licensing"
+    },
+    {
+      source : "226 - NULL",
+      target : "344 - Estudios Liberales",
+      type: "licensing"
+    },
+    {
+      source : "188 - NULL",
+      target : "345 - Diseño Urbano",
+      type: "licensing"
+    },
+    {
+      source : "165 - NULL",
+      target : "346 - Diseño Digital, Multimedia",
+      type: "licensing"
+    },
+    {
+      source : "188 - NULL",
+      target : "347 - Teatro",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "348 - Psicología, Salud Mental",
+      type: "licensing"
+    },
+    {
+      source : "256 - NULL",
+      target : "349 - Traducción",
+      type: "licensing"
+    },
+    {
+      source : "158 - NULL",
+      target : "350 - Traducción e Interpretación",
+      type: "licensing"
+    },
+    {
+      source : "226 - NULL",
+      target : "351 - Lenguaje y Literatura Inglesa",
+      type: "licensing"
+    },
+    {
+      source : "226 - NULL",
+      target : "352 - Estudios Museísticos",
+      type: "licensing"
+    },
+    {
+      source : "226 - NULL",
+      target : "353 - Conservación Histórica",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "354 - Farmacéutico",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "355 - Dermatología",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "356 - Seguros",
+      type: "licensing"
+    },
+    {
+      source : "170 - NULL",
+      target : "357 - Ingeniería de Sistemas",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "358 - Educación Para Adultos",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "359 - Fisioterapia",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "360 - Administración Hospitalaria",
+      type: "licensing"
+    },
+    {
+      source : "181 - NULL",
+      target : "361 - Dietética y Nutrición",
+      type: "licensing"
+    },
+    {
+      source : "226 - NULL",
+      target : "362 - Religión",
+      type: "licensing"
+    },
+    {
+      source : "194 - NULL",
+      target : "363 - Psicoterapia",
+      type: "licensing"
+    },
+    {
+      source : "194 - NULL",
+      target : "364 - Neuropsicología",
+      type: "licensing"
+    },
+    {
+      source : "194 - NULL",
+      target : "365 - Consejería Matrimonial y Familiar",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "366 - Ciencias Sanitarias (Varias)",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "367 - Estudios de Organización",
+      type: "licensing"
+    },
+    {
+      source : "238 - NULL",
+      target : "368 - Estudios Del Medio Ambiente",
+      type: "licensing"
+    },
+    {
+      source : "170 - NULL",
+      target : "369 - Minería",
+      type: "licensing"
+    },
+    {
+      source : "238 - NULL",
+      target : "370 - Energía Hidráulica",
+      type: "licensing"
+    },
+    {
+      source : "256 - NULL",
+      target : "371 - Traducción/Interpretación",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "372 - Atención y Animación Infantil",
+      type: "licensing"
+    },
+    {
+      source : "226 - NULL",
+      target : "373 - Estudios Asiáticos",
+      type: "licensing"
+    },
+    {
+      source : "256 - NULL",
+      target : "374 - Chino Mandarín",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "375 - Estudios Tecnológicos",
+      type: "licensing"
+    },
+    {
+      source : "238 - NULL",
+      target : "376 - Energías Renovables y Eficiencia Energética",
+      type: "licensing"
+    },
+    {
+      source : "319 - NULL",
+      target : "377 - Dirección Medio Ambiental",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "378 - Administración de Hospitales y Clínicas",
+      type: "licensing"
+    },
+    {
+      source : "238 - NULL",
+      target : "379 - Contaminación de Suelos",
+      type: "licensing"
+    },
+    {
+      source : "165 - NULL",
+      target : "380 - Quarkxpress 6",
+      type: "licensing"
+    },
+    {
+      source : "381 - NULL",
+      target : "382 - Gestión de Calidad",
+      type: "licensing"
+    },
+    {
+      source : "554 - Programas Empresariales",
+      target : "555 - Económicas",
+      type: "licensing"
+    },
+    {
+      source : "383 - NULL",
+      target : "384 - Impuestos Otros",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "385 - Auxiliar de Enfermería",
+      type: "licensing"
+    },
+    {
+      source : "175 - NULL",
+      target : "386 - Cosmetología",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "387 - Hematología",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "388 - Urgencias Médicas y Sanitarias",
+      type: "licensing"
+    },
+    {
+      source : "194 - NULL",
+      target : "389 - Adicciones",
+      type: "licensing"
+    },
+    {
+      source : "183 - NULL",
+      target : "390 - Gestión de Personal",
+      type: "licensing"
+    },
+    {
+      source : "194 - NULL",
+      target : "391 - Orientación y Terapia Familiar",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "392 - Fundamentos de la Educación",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "393 - Desarrollo Económico",
+      type: "licensing"
+    },
+    {
+      source : "542 - Programas Empresariales",
+      target : "545 - re Humanos",
+      type: "licensing"
+    },
+    {
+      source : "394 - NULL",
+      target : "395 - Medicina Veterinaria",
+      type: "licensing"
+    },
+    {
+      source : "206 - NULL",
+      target : "396 - Fotografía",
+      type: "licensing"
+    },
+    {
+      source : "163 - NULL",
+      target : "397 - Azafatas - Azafatos de Congresos, Trenes y Cruceros",
+      type: "licensing"
+    },
+    {
+      source : "256 - NULL",
+      target : "398 - Lenguaje de Señas",
+      type: "licensing"
+    },
+    {
+      source : "194 - NULL",
+      target : "399 - Psicología - Aplicada",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "400 - Creación y Dirección de Empresas",
+      type: "licensing"
+    },
+    {
+      source : "185 - NULL",
+      target : "401 - Atención al Cliente",
+      type: "licensing"
+    },
+    {
+      source : "231 - NULL",
+      target : "402 - Corte y Confección",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "403 - Estudios Internacionales",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "404 - Educación Musical",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "405 - Comunicación de Negocios y Corporativa",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "406 - Ginecología y Obstetricia",
+      type: "licensing"
+    },
+    {
+      source : "170 - NULL",
+      target : "407 - Electricidad, Electrónica, Informática",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "408 - Toxicología",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "409 - Partería - Matrona",
+      type: "licensing"
+    },
+    {
+      source : "185 - NULL",
+      target : "410 - Comercio Exterior, Exportaciones, Importaciones",
+      type: "licensing"
+    },
+    {
+      source : "194 - NULL",
+      target : "411 - Psicología - Desarrollo",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "412 - Ciencias Biomédicas",
+      type: "licensing"
+    },
+    {
+      source : "319 - NULL",
+      target : "413 - Ciencias Marinas",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "414 - Dirección Seguridad",
+      type: "licensing"
+    },
+    {
+      source : "165 - NULL",
+      target : "415 - Reparación y Mantenimiento de Computadores",
+      type: "licensing"
+    },
+    {
+      source : "165 - NULL",
+      target : "416 - Visual Basic (Visualbasic)",
+      type: "licensing"
+    },
+    {
+      source : "188 - NULL",
+      target : "417 - Arte Electrónico",
+      type: "licensing"
+    },
+    {
+      source : "163 - NULL",
+      target : "418 - Tripulante de Cabina de Pasajeros",
+      type: "licensing"
+    },
+    {
+      source : "163 - NULL",
+      target : "419 - Especialista en Operaciones Aéreas (Flight Dispatche)",
+      type: "licensing"
+    },
+    {
+      source : "165 - NULL",
+      target : "420 - Ingeniería Del Software",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "421 - Administración Deportiva",
+      type: "licensing"
+    },
+    {
+      source : "188 - NULL",
+      target : "422 - Danza",
+      type: "licensing"
+    },
+    {
+      source : "213 - NULL",
+      target : "423 - Gestión Administrativa, Administrativos",
+      type: "licensing"
+    },
+    {
+      source : "165 - NULL",
+      target : "424 - Ofimática Windows",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "425 - Negocios Internacionales",
+      type: "licensing"
+    },
+    {
+      source : "165 - NULL",
+      target : "426 - 3d",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "427 - Investigación Médica y de Enfermedades",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "428 - Infectología",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "429 - Traumatología y Ortopedia",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "430 - Pediatría y Puericultura",
+      type: "licensing"
+    },
+    {
+      source : "289 - NULL",
+      target : "431 - Política Pública",
+      type: "licensing"
+    },
+    {
+      source : "170 - NULL",
+      target : "432 - Innovación Tecnológica",
+      type: "licensing"
+    },
+    {
+      source : "156 - NULL",
+      target : "433 - Derecho Laboral y Seguridad Social",
+      type: "licensing"
+    },
+    {
+      source : "156 - NULL",
+      target : "434 - Derecho Sociedades/ Asesoría Jurídica",
+      type: "licensing"
+    },
+    {
+      source : "165 - NULL",
+      target : "435 - Java y Javascript",
+      type: "licensing"
+    },
+    {
+      source : "165 - NULL",
+      target : "436 - Programación .Net",
+      type: "licensing"
+    },
+    {
+      source : "165 - NULL",
+      target : "437 - Flash, Action Script",
+      type: "licensing"
+    },
+    {
+      source : "165 - NULL",
+      target : "438 - Oracle",
+      type: "licensing"
+    },
+    {
+      source : "165 - NULL",
+      target : "439 - Programación Sql",
+      type: "licensing"
+    },
+    {
+      source : "168 - NULL",
+      target : "440 - Calidad y Seguridad",
+      type: "licensing"
+    },
+    {
+      source : "165 - NULL",
+      target : "441 - Administración y Gestión de Redes Microsoft Server",
+      type: "licensing"
+    },
+    {
+      source : "188 - NULL",
+      target : "442 - Gestión de Exposiciones",
+      type: "licensing"
+    },
+    {
+      source : "163 - NULL",
+      target : "443 - Agente de Viajes",
+      type: "licensing"
+    },
+    {
+      source : "218 - NULL",
+      target : "444 - Gestión de Carteras",
+      type: "licensing"
+    },
+    {
+      source : "170 - NULL",
+      target : "445 - Ciencias Experimentales: Química / Farmacia",
+      type: "licensing"
+    },
+    {
+      source : "170 - NULL",
+      target : "446 - Planificación Urbana y Regional",
+      type: "licensing"
+    },
+    {
+      source : "170 - NULL",
+      target : "447 - Ingeniería de Petróleos",
+      type: "licensing"
+    },
+    {
+      source : "168 - NULL",
+      target : "448 - Especialidad Higiene Industrial",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "449 - Educación Matemática",
+      type: "licensing"
+    },
+    {
+      source : "188 - NULL",
+      target : "450 - Cerámica",
+      type: "licensing"
+    },
+    {
+      source : "188 - NULL",
+      target : "451 - Actuación",
+      type: "licensing"
+    },
+    {
+      source : "188 - NULL",
+      target : "452 - Dirección Teatral",
+      type: "licensing"
+    },
+    {
+      source : "251 - NULL",
+      target : "453 - Ecología",
+      type: "licensing"
+    },
+    {
+      source : "251 - NULL",
+      target : "454 - Genética",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "455 - Martillero",
+      type: "licensing"
+    },
+    {
+      source : "270 - NULL",
+      target : "456 - Resolución de Conflictos",
+      type: "licensing"
+    },
+    {
+      source : "156 - NULL",
+      target : "457 - Mediación",
+      type: "licensing"
+    },
+    {
+      source : "170 - NULL",
+      target : "458 - Ingeniería Aeronáutica",
+      type: "licensing"
+    },
+    {
+      source : "188 - NULL",
+      target : "459 - Pintura",
+      type: "licensing"
+    },
+    {
+      source : "226 - NULL",
+      target : "460 - Letras",
+      type: "licensing"
+    },
+    {
+      source : "215 - NULL",
+      target : "461 - Astronomía",
+      type: "licensing"
+    },
+    {
+      source : "188 - NULL",
+      target : "462 - Animación",
+      type: "licensing"
+    },
+    {
+      source : "194 - NULL",
+      target : "463 - Ciencias Del Comportamiento",
+      type: "licensing"
+    },
+    {
+      source : "464 - NULL",
+      target : "465 - Educación Ejecutiva Gestión Integrada, Calidad, Medio Ambiente y Prevención",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "466 - Aduana",
+      type: "licensing"
+    },
+    {
+      source : "215 - NULL",
+      target : "467 - Física",
+      type: "licensing"
+    },
+    {
+      source : "185 - NULL",
+      target : "468 - Editorial",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "469 - Tenis",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "470 - Fútbol",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "471 - Recreación",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "472 - Educación Sanitaria",
+      type: "licensing"
+    },
+    {
+      source : "289 - NULL",
+      target : "473 - Gobierno",
+      type: "licensing"
+    },
+    {
+      source : "289 - NULL",
+      target : "474 - Seguridad Social",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "475 - Podología",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "476 - Protección Civil",
+      type: "licensing"
+    },
+    {
+      source : "170 - NULL",
+      target : "477 - Ingeniería Naval",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "478 - Natación",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "479 - Educación Bilingüe, Multicultural",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "480 - Secretaria Médica",
+      type: "licensing"
+    },
+    {
+      source : "231 - NULL",
+      target : "481 - Peluquería",
+      type: "licensing"
+    },
+    {
+      source : "329 - NULL",
+      target : "482 - Derecho Inmobiliario",
+      type: "licensing"
+    },
+    {
+      source : "194 - NULL",
+      target : "483 - Logopedia",
+      type: "licensing"
+    },
+    {
+      source : "218 - NULL",
+      target : "484 - Dirección Financiera",
+      type: "licensing"
+    },
+    {
+      source : "158 - NULL",
+      target : "485 - Audiovisual",
+      type: "licensing"
+    },
+    {
+      source : "238 - NULL",
+      target : "486 - Sanidad y Seguridad Ocupacional",
+      type: "licensing"
+    },
+    {
+      source : "226 - NULL",
+      target : "487 - Enseñanza de Lenguajes",
+      type: "licensing"
+    },
+    {
+      source : "178 - NULL",
+      target : "488 - Cuerpos de Seguridad",
+      type: "licensing"
+    },
+    {
+      source : "185 - NULL",
+      target : "489 - Gestión de Marketing",
+      type: "licensing"
+    },
+    {
+      source : "192 - NULL",
+      target : "490 - Ciencias Agronómicas",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "491 - Ciencias Del Deporte",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "492 - Instrucción y Currículum",
+      type: "licensing"
+    },
+    {
+      source : "194 - NULL",
+      target : "493 - Psicología - Cognitiva",
+      type: "licensing"
+    },
+    {
+      source : "340 - NULL",
+      target : "494 - Análisis y Control",
+      type: "licensing"
+    },
+    {
+      source : "206 - NULL",
+      target : "495 - Cine",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "496 - Enseñanza de Ciencias Sociales",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "497 - Profesorado - Docencia",
+      type: "licensing"
+    },
+    {
+      source : "238 - NULL",
+      target : "498 - Conservación Ambiental",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "499 - Enseñanza de Inglés",
+      type: "licensing"
+    },
+    {
+      source : "221 - NULL",
+      target : "500 - Estudios Forenses",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "501 - Desarrollo Directivo",
+      type: "licensing"
+    },
+    {
+      source : "226 - NULL",
+      target : "502 - Arqueología",
+      type: "licensing"
+    },
+    {
+      source : "238 - NULL",
+      target : "503 - Auditor de Sistemas de Gestión Medioambiental",
+      type: "licensing"
+    },
+    {
+      source : "156 - NULL",
+      target : "504 - Derecho Civil",
+      type: "licensing"
+    },
+    {
+      source : "213 - NULL",
+      target : "505 - Auditoría de Empresas",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "506 - Navegación",
+      type: "licensing"
+    },
+    {
+      source : "194 - NULL",
+      target : "507 - Psicología Social",
+      type: "licensing"
+    },
+    {
+      source : "175 - NULL",
+      target : "508 - Mecánico de Autos",
+      type: "licensing"
+    },
+    {
+      source : "165 - NULL",
+      target : "509 - Tecnología Educativa",
+      type: "licensing"
+    },
+    {
+      source : "256 - NULL",
+      target : "510 - Portugués",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "511 - Dirección de Recursos Naturales",
+      type: "licensing"
+    },
+    {
+      source : "170 - NULL",
+      target : "512 - Construcción",
+      type: "licensing"
+    },
+    {
+      source : "168 - NULL",
+      target : "513 - Gestión Integrada, Calidad, Medio Ambiente y Prevención",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "514 - Auxiliar de Farmacia",
+      type: "licensing"
+    },
+    {
+      source : "170 - NULL",
+      target : "515 - Ingeniería Pesquera",
+      type: "licensing"
+    },
+    {
+      source : "170 - NULL",
+      target : "516 - Ingeniería Informática",
+      type: "licensing"
+    },
+    {
+      source : "170 - NULL",
+      target : "517 - Ingeniería Biomédica",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "518 - Gimnasia",
+      type: "licensing"
+    },
+    {
+      source : "158 - NULL",
+      target : "519 - Gestión de Empresas de Comunicación",
+      type: "licensing"
+    },
+    {
+      source : "163 - NULL",
+      target : "520 - Protocolo - Etiqueta",
+      type: "licensing"
+    },
+    {
+      source : "170 - NULL",
+      target : "521 - Ingeniería Física",
+      type: "licensing"
+    },
+    {
+      source : "213 - NULL",
+      target : "522 - Control de Gestión",
+      type: "licensing"
+    },
+    {
+      source : "188 - NULL",
+      target : "523 - Estudio de Medios",
+      type: "licensing"
+    },
+    {
+      source : "211 - NULL",
+      target : "524 - Consejería y Orientación Educativa",
+      type: "licensing"
+    },
+    {
+      source : "161 - NULL",
+      target : "525 - Relaciones Laborales e Industriales",
+      type: "licensing"
+    },
+    {
+      source : "156 - NULL",
+      target : "526 - Urbanismo y Administraciones Públicas",
+      type: "licensing"
+    },
+    {
+      source : "258 - NULL",
+      target : "527 - Estadística",
+      type: "licensing"
+    },
+    {
+      source : "258 - NULL",
+      target : "528 - Ciencias Actuariales",
+      type: "licensing"
+    },
+    {
+      source : "190 - NULL",
+      target : "529 - Paramédico",
+      type: "licensing"
+    },
+    {
+      source : "175 - NULL",
+      target : "530 - Capacitación Profesional de Transporte de Mercancía",
+      type: "licensing"
+    },
+    {
+      source : "340 - NULL",
+      target : "531 - Microbiología/Biotecnología",
+      type: "licensing"
+    },
+    {
+      source : "231 - NULL",
+      target : "532 - Joyería",
+      type: "licensing"
+    },
+    {
+      source : "158 - NULL",
+      target : "533 - Video Digital",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "574 - Riesgos Laborales",
+      type: "licensing"
+    },
+    {
+      source : "574 - Riesgos Laborales",
+      target : "575 - Gestión Integrada, Calidad, Medio Ambiente y Prevención",
+      type: "licensing"
+    },
+    {
+      source : "542 - Programas Empresariales",
+      target : "576 - Económicas",
+      type: "licensing"
+    },
+    {
+      source : "542 - Programas Empresariales",
+      target : "577 - Finanzas Empresariales",
+      type: "licensing"
+    },
+    {
+      source : "538 - Ingeniería y Tecnología",
+      target : "578 - Ingeniería Industrial",
+      type: "licensing"
+    },
+    {
+      source : "542 - Programas Empresariales",
+      target : "579 - Gestión de Stocks y Almacenes",
+      type: "licensing"
+    },
+    {
+      source : "542 - Programas Empresariales",
+      target : "580 - Marketing",
+      type: "licensing"
+    },
+    {
+      source : "538 - Ingeniería y Tecnología",
+      target : "581 - Tecnología",
+      type: "licensing"
+    },
+    {
+      source : "538 - Ingeniería y Tecnología",
+      target : "582 - Ingeniería Medio Ambiental",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "583 - Gestión Medio Ambiente",
+      type: "licensing"
+    },
+    {
+      source : "583 - Gestión Medio Ambiente",
+      target : "584 - Sanidad y Seguridad Ocupacional",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "585 - Informática e Información",
+      type: "licensing"
+    },
+    {
+      source : "585 - Informática e Información",
+      target : "586 - Tecnología de la Información",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "587 - Informática e Información",
+      type: "licensing"
+    },
+    {
+      source : "587 - Informática e Información",
+      target : "588 - Tecnología de la Información",
+      type: "licensing"
+    },
+    {
+      source : "536 - Programas Empresariales",
+      target : "589 - Negocios Internacionales",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "590 - Salud y Medicina",
+      type: "licensing"
+    },
+    {
+      source : "590 - Salud y Medicina",
+      target : "591 - Farmacología",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "592 - Psicología y Ciencias Sociales y de Comportamiento",
+      type: "licensing"
+    },
+    {
+      source : "592 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "593 - Psicología - Todas",
+      type: "licensing"
+    },
+    {
+      source : "562 - Ingeniería y Tecnología",
+      target : "594 - Tecnología",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "595 - Contabilidad Empresarial",
+      type: "licensing"
+    },
+    {
+      source : "595 - Contabilidad Empresarial",
+      target : "596 - Contabilidad",
+      type: "licensing"
+    },
+    {
+      source : "552 - Ingeniería y Tecnología",
+      target : "597 - Construcción",
+      type: "licensing"
+    },
+    {
+      source : "560 - Informática e Información",
+      target : "598 - Redes Informáticas",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "599 - Habilidades Personales",
+      type: "licensing"
+    },
+    {
+      source : "599 - Habilidades Personales",
+      target : "600 - Coaching Transformacional",
+      type: "licensing"
+    },
+    {
+      source : "554 - Programas Empresariales",
+      target : "601 - Enseñanza de Negocios (Educación)",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "602 - Economía y Finanzas",
+      type: "licensing"
+    },
+    {
+      source : "602 - Economía y Finanzas",
+      target : "603 - Finanzas",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "604 - Calidad",
+      type: "licensing"
+    },
+    {
+      source : "604 - Calidad",
+      target : "605 - Gestión de Calidad",
+      type: "licensing"
+    },
+    {
+      source : "554 - Programas Empresariales",
+      target : "606 - Logística",
+      type: "licensing"
+    },
+    {
+      source : "554 - Programas Empresariales",
+      target : "607 - Estudios de Organización",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "608 - Recursos Humanos - Rrhh",
+      type: "licensing"
+    },
+    {
+      source : "608 - Recursos Humanos - Rrhh",
+      target : "609 - Dirección y Gestión de Recursos Humanos",
+      type: "licensing"
+    },
+    {
+      source : "560 - Informática e Información",
+      target : "610 - Sistemas de Información",
+      type: "licensing"
+    },
+    {
+      source : "554 - Programas Empresariales",
+      target : "611 - Marketing",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "612 - Habilidades Personales",
+      type: "licensing"
+    },
+    {
+      source : "612 - Habilidades Personales",
+      target : "613 - Coaching Transformacional",
+      type: "licensing"
+    },
+    {
+      source : "536 - Programas Empresariales",
+      target : "614 - Marketing",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "615 - Economía y Finanzas",
+      type: "licensing"
+    },
+    {
+      source : "615 - Economía y Finanzas",
+      target : "616 - Dirección Financiera",
+      type: "licensing"
+    },
+    {
+      source : "554 - Programas Empresariales",
+      target : "617 - Dirección de Empresas y Negocios (Otros)",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "618 - Recursos Humanos - Rrhh",
+      type: "licensing"
+    },
+    {
+      source : "618 - Recursos Humanos - Rrhh",
+      target : "619 - Dirección y Gestión de Recursos Humanos",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "620 - Ciencias Sociales y Humanidades",
+      type: "licensing"
+    },
+    {
+      source : "620 - Ciencias Sociales y Humanidades",
+      target : "621 - Historia",
+      type: "licensing"
+    },
+    {
+      source : "620 - Ciencias Sociales y Humanidades",
+      target : "622 - Política",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "623 - Ciencias Sociales y Humanidades",
+      type: "licensing"
+    },
+    {
+      source : "623 - Ciencias Sociales y Humanidades",
+      target : "624 - Historia",
+      type: "licensing"
+    },
+    {
+      source : "587 - Informática e Información",
+      target : "625 - Redes Informáticas",
+      type: "licensing"
+    },
+    {
+      source : "587 - Informática e Información",
+      target : "626 - Ingeniería Del Software",
+      type: "licensing"
+    },
+    {
+      source : "587 - Informática e Información",
+      target : "627 - Tecnología Educativa",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "628 - Derecho / Leyes",
+      type: "licensing"
+    },
+    {
+      source : "628 - Derecho / Leyes",
+      target : "629 - Derecho Laboral y Seguridad Social",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "630 - Educación",
+      type: "licensing"
+    },
+    {
+      source : "630 - Educación",
+      target : "631 - e-Learning",
+      type: "licensing"
+    },
+    {
+      source : "538 - Ingeniería y Tecnología",
+      target : "632 - Arquitectura",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "633 - Contabilidad Empresarial",
+      type: "licensing"
+    },
+    {
+      source : "633 - Contabilidad Empresarial",
+      target : "634 - Contabilidad",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "635 - re Humanos - Rrhh",
+      type: "licensing"
+    },
+    {
+      source : "635 - re Humanos - Rrhh",
+      target : "636 - Dirección y Gestión de re Humanos",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "637 - Criminología y Estudios Forenses",
+      type: "licensing"
+    },
+    {
+      source : "637 - Criminología y Estudios Forenses",
+      target : "638 - Criminología",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "639 - Empleo Público y Oposiciones",
+      type: "licensing"
+    },
+    {
+      source : "639 - Empleo Público y Oposiciones",
+      target : "640 - Seguridad Civil",
+      type: "licensing"
+    },
+    {
+      source : "542 - Programas Empresariales",
+      target : "641 - Negocios Internacionales",
+      type: "licensing"
+    },
+    {
+      source : "542 - Programas Empresariales",
+      target : "642 - Comercio Internacional",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "643 - Derecho / Leyes",
+      type: "licensing"
+    },
+    {
+      source : "643 - Derecho / Leyes",
+      target : "644 - Derecho Varios",
+      type: "licensing"
+    },
+    {
+      source : "620 - Ciencias Sociales y Humanidades",
+      target : "645 - Conservación Histórica",
+      type: "licensing"
+    },
+    {
+      source : "592 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "646 - Sociología",
+      type: "licensing"
+    },
+    {
+      source : "554 - Programas Empresariales",
+      target : "647 - Recursos Humanos",
+      type: "licensing"
+    },
+    {
+      source : "554 - Programas Empresariales",
+      target : "648 - Negocios Internacionales",
+      type: "licensing"
+    },
+    {
+      source : "554 - Programas Empresariales",
+      target : "649 - Administracion de Negocios",
+      type: "licensing"
+    },
+    {
+      source : "623 - Ciencias Sociales y Humanidades",
+      target : "650 - Política",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "651 - Derecho / Leyes",
+      type: "licensing"
+    },
+    {
+      source : "651 - Derecho / Leyes",
+      target : "652 - Derecho Empresarial",
+      type: "licensing"
+    },
+    {
+      source : "552 - Ingeniería y Tecnología",
+      target : "653 - Tecnología",
+      type: "licensing"
+    },
+    {
+      source : "651 - Derecho / Leyes",
+      target : "654 - Derecho Varios",
+      type: "licensing"
+    },
+    {
+      source : "651 - Derecho / Leyes",
+      target : "655 - Derecho Sociedades/ Asesoría Jurídica",
+      type: "licensing"
+    },
+    {
+      source : "628 - Derecho / Leyes",
+      target : "656 - Derecho Varios",
+      type: "licensing"
+    },
+    {
+      source : "628 - Derecho / Leyes",
+      target : "657 - Derecho Empresarial",
+      type: "licensing"
+    },
+    {
+      source : "554 - Programas Empresariales",
+      target : "658 - Relaciones Internacionales",
+      type: "licensing"
+    },
+    {
+      source : "542 - Programas Empresariales",
+      target : "659 - Telecomunicaciones",
+      type: "licensing"
+    },
+    {
+      source : "651 - Derecho / Leyes",
+      target : "660 - Urbanismo y Administraciones Públicas",
+      type: "licensing"
+    },
+    {
+      source : "574 - Riesgos Laborales",
+      target : "661 - Calidad y Seguridad",
+      type: "licensing"
+    },
+    {
+      source : "620 - Ciencias Sociales y Humanidades",
+      target : "662 - Literatura Comparativa",
+      type: "licensing"
+    },
+    {
+      source : "620 - Ciencias Sociales y Humanidades",
+      target : "663 - Filosofía",
+      type: "licensing"
+    },
+    {
+      source : "620 - Ciencias Sociales y Humanidades",
+      target : "664 - Estudios Liberales",
+      type: "licensing"
+    },
+    {
+      source : "620 - Ciencias Sociales y Humanidades",
+      target : "665 - Religión",
+      type: "licensing"
+    },
+    {
+      source : "620 - Ciencias Sociales y Humanidades",
+      target : "666 - LingüÍStica",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "667 - Psicología y Ciencias Sociales y de Comportamiento",
+      type: "licensing"
+    },
+    {
+      source : "667 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "668 - Neuropsicología",
+      type: "licensing"
+    },
+    {
+      source : "667 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "669 - Psicopedagogía",
+      type: "licensing"
+    },
+    {
+      source : "667 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "670 - Psicología - Todas",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "671 - Psicología y Ciencias Sociales y de Comportamiento",
+      type: "licensing"
+    },
+    {
+      source : "671 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "672 - Psicología - Clínica",
+      type: "licensing"
+    },
+    {
+      source : "671 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "673 - Psicología - Todas",
+      type: "licensing"
+    },
+    {
+      source : "671 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "674 - Neuropsicología",
+      type: "licensing"
+    },
+    {
+      source : "671 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "675 - Psicoterapia",
+      type: "licensing"
+    },
+    {
+      source : "572 - Riesgos Laborales",
+      target : "676 - Ergonomía",
+      type: "licensing"
+    },
+    {
+      source : "548 - Educación Ejecutiva Programas Empresariales",
+      target : "677 - Enseñanza de Otros Temas",
+      type: "licensing"
+    },
+    {
+      source : "671 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "678 - Psicología - Cognitiva",
+      type: "licensing"
+    },
+    {
+      source : "671 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "679 - Psicología - Forense",
+      type: "licensing"
+    },
+    {
+      source : "671 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "680 - Psicopedagogía",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "681 - Ciencias Agrarias",
+      type: "licensing"
+    },
+    {
+      source : "681 - Ciencias Agrarias",
+      target : "682 - Economía Agrícola",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "683 - Calidad",
+      type: "licensing"
+    },
+    {
+      source : "683 - Calidad",
+      target : "684 - Gestión de Calidad",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "685 - Salud y Medicina",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "686 - Cardiología",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "687 - Cirugía",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "688 - Periodismo y Ciencias de la Información",
+      type: "licensing"
+    },
+    {
+      source : "688 - Periodismo y Ciencias de la Información",
+      target : "689 - Comunicaciones",
+      type: "licensing"
+    },
+    {
+      source : "688 - Periodismo y Ciencias de la Información",
+      target : "690 - Periodismo",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "691 - Pediatría y Puericultura",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "692 - Odontología",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "693 - Alergia e Inmunología",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "694 - Flebología",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "695 - Geriatría",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "696 - Deportes y Educación",
+      type: "licensing"
+    },
+    {
+      source : "696 - Deportes y Educación",
+      target : "697 - Kinesiología",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "698 - Microbiología",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "699 - Neurología",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "700 - Nutrición",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "701 - ÓPtica, Ciencias Oftalmológicas",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "702 - Oncología",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "703 - Otorrinolaringología",
+      type: "licensing"
+    },
+    {
+      source : "667 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "704 - Psiquiatría",
+      type: "licensing"
+    },
+    {
+      source : "590 - Salud y Medicina",
+      target : "705 - Ciencias Biomédicas",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "706 - Cardiología",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "707 - Cirugía",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "708 - Farmacología",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "709 - Medicina",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "710 - Otorrinolaringología",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "711 - Epidemiología",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "712 - ÓPtica, Ciencias Oftalmológicas",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "713 - Odontología",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "714 - Ciencias Biomédicas",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "715 - Salud Pública",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "716 - Medicina Deportiva",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "717 - Arte y Bellas Artes",
+      type: "licensing"
+    },
+    {
+      source : "717 - Arte y Bellas Artes",
+      target : "718 - Música",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "719 - Arte y Bellas Artes",
+      type: "licensing"
+    },
+    {
+      source : "719 - Arte y Bellas Artes",
+      target : "720 - Música",
+      type: "licensing"
+    },
+    {
+      source : "536 - Programas Empresariales",
+      target : "721 - Gestión Pública",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "722 - Riesgos Laborales",
+      type: "licensing"
+    },
+    {
+      source : "722 - Riesgos Laborales",
+      target : "723 - Prevención de Riesgos Laborales",
+      type: "licensing"
+    },
+    {
+      source : "536 - Programas Empresariales",
+      target : "724 - Comercio Internacional",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "725 - Contabilidad Empresarial",
+      type: "licensing"
+    },
+    {
+      source : "725 - Contabilidad Empresarial",
+      target : "726 - Contabilidad",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "727 - Mba",
+      type: "licensing"
+    },
+    {
+      source : "727 - Mba",
+      target : "728 - Mba -  of Business Administration",
+      type: "licensing"
+    },
+    {
+      source : "615 - Economía y Finanzas",
+      target : "729 - Finanzas",
+      type: "licensing"
+    },
+    {
+      source : "615 - Economía y Finanzas",
+      target : "730 - Mercados Financieros / Bolsa",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "731 - Ciencias Sociales y Humanidades",
+      type: "licensing"
+    },
+    {
+      source : "731 - Ciencias Sociales y Humanidades",
+      target : "732 - Política",
+      type: "licensing"
+    },
+    {
+      source : "542 - Programas Empresariales",
+      target : "733 - Desarrollo Directivo",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "734 - Física y Química",
+      type: "licensing"
+    },
+    {
+      source : "734 - Física y Química",
+      target : "735 - Ciencia - Otras",
+      type: "licensing"
+    },
+    {
+      source : "554 - Programas Empresariales",
+      target : "736 - Responsabilidad Social Corporativa",
+      type: "licensing"
+    },
+    {
+      source : "554 - Programas Empresariales",
+      target : "737 - Administración de Empresas",
+      type: "licensing"
+    },
+    {
+      source : "554 - Programas Empresariales",
+      target : "738 - Finanzas Empresariales",
+      type: "licensing"
+    },
+    {
+      source : "536 - Programas Empresariales",
+      target : "739 - Relaciones Internacionales",
+      type: "licensing"
+    },
+    {
+      source : "590 - Salud y Medicina",
+      target : "740 - Ciencias Médicas",
+      type: "licensing"
+    },
+    {
+      source : "592 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "741 - Orientación y Terapia Familiar",
+      type: "licensing"
+    },
+    {
+      source : "536 - Programas Empresariales",
+      target : "742 - Administracion de Negocios",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "743 - Gestión Medio Ambiente",
+      type: "licensing"
+    },
+    {
+      source : "743 - Gestión Medio Ambiente",
+      target : "744 - Dirección y Gestión Del Medio Ambiente",
+      type: "licensing"
+    },
+    {
+      source : "623 - Ciencias Sociales y Humanidades",
+      target : "745 - LingüÍStica",
+      type: "licensing"
+    },
+    {
+      source : "548 - Educación Ejecutiva Programas Empresariales",
+      target : "746 - Administración Educativa",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "747 - Periodismo y Ciencias de la Información",
+      type: "licensing"
+    },
+    {
+      source : "747 - Periodismo y Ciencias de la Información",
+      target : "748 - Comunicaciones",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "749 - Matemáticas y Estadística",
+      type: "licensing"
+    },
+    {
+      source : "749 - Matemáticas y Estadística",
+      target : "750 - Estadística",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "751 - Impuestos / Fiscal",
+      type: "licensing"
+    },
+    {
+      source : "751 - Impuestos / Fiscal",
+      target : "752 - Impuestos Otros",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "753 - Idiomas",
+      type: "licensing"
+    },
+    {
+      source : "753 - Idiomas",
+      target : "754 - Inglés",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "755 - Economía y Finanzas",
+      type: "licensing"
+    },
+    {
+      source : "755 - Economía y Finanzas",
+      target : "756 - Mercados Financieros / Bolsa",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "757 - Gestión Inmobiliaria - Urbanismo",
+      type: "licensing"
+    },
+    {
+      source : "757 - Gestión Inmobiliaria - Urbanismo",
+      target : "758 - Gestión Inmobiliaria",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "759 - Ciencias Agrarias",
+      type: "licensing"
+    },
+    {
+      source : "759 - Ciencias Agrarias",
+      target : "760 - Ciencias Gastronómicas",
+      type: "licensing"
+    },
+    {
+      source : "592 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "761 - Psicología - Clínica",
+      type: "licensing"
+    },
+    {
+      source : "643 - Derecho / Leyes",
+      target : "762 - Abogacía y Práctica Jurídica",
+      type: "licensing"
+    },
+    {
+      source : "643 - Derecho / Leyes",
+      target : "763 - Propiedad Intelectual e Industrial",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "764 - Dermatología",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "765 - Ciencias Biológicas",
+      type: "licensing"
+    },
+    {
+      source : "765 - Ciencias Biológicas",
+      target : "766 - Biología",
+      type: "licensing"
+    },
+    {
+      source : "546 - Publicidad y Marketing",
+      target : "767 - Investigación de Mercados",
+      type: "licensing"
+    },
+    {
+      source : "671 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "768 - Psicología - Desarrollo",
+      type: "licensing"
+    },
+    {
+      source : "542 - Programas Empresariales",
+      target : "769 - Enseñanza de Negocios (Educación)",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "770 - Ciencias Agrarias",
+      type: "licensing"
+    },
+    {
+      source : "770 - Ciencias Agrarias",
+      target : "771 - Economía Agrícola",
+      type: "licensing"
+    },
+    {
+      source : "770 - Ciencias Agrarias",
+      target : "772 - Ingeniería Agrícola",
+      type: "licensing"
+    },
+    {
+      source : "770 - Ciencias Agrarias",
+      target : "773 - Ciencias Agrícolas",
+      type: "licensing"
+    },
+    {
+      source : "574 - Riesgos Laborales",
+      target : "774 - Seguridad en el Trabajo",
+      type: "licensing"
+    },
+    {
+      source : "681 - Ciencias Agrarias",
+      target : "775 - Ciencias Agrícolas",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "776 - Ciencias Biológicas",
+      type: "licensing"
+    },
+    {
+      source : "776 - Ciencias Biológicas",
+      target : "777 - Biología",
+      type: "licensing"
+    },
+    {
+      source : "743 - Gestión Medio Ambiente",
+      target : "778 - Ciencia Del Medio Ambiente",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "779 - Ciencias de Laboratorio Clínico",
+      type: "licensing"
+    },
+    {
+      source : "776 - Ciencias Biológicas",
+      target : "780 - Biotecnología",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "781 - Oncología",
+      type: "licensing"
+    },
+    {
+      source : "671 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "782 - Psiquiatría",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "783 - Ciencias Médicas",
+      type: "licensing"
+    },
+    {
+      source : "542 - Programas Empresariales",
+      target : "784 - Gestión Pública",
+      type: "licensing"
+    },
+    {
+      source : "583 - Gestión Medio Ambiente",
+      target : "785 - Estudios Del Medio Ambiente",
+      type: "licensing"
+    },
+    {
+      source : "643 - Derecho / Leyes",
+      target : "786 - Derecho Empresarial",
+      type: "licensing"
+    },
+    {
+      source : "49 - Carreras",
+      target : "787 - Derecho / Leyes",
+      type: "licensing"
+    },
+    {
+      source : "787 - Derecho / Leyes",
+      target : "788 - Derecho Varios",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "789 - Arte y Bellas Artes",
+      type: "licensing"
+    },
+    {
+      source : "789 - Arte y Bellas Artes",
+      target : "790 - Arte",
+      type: "licensing"
+    },
+    {
+      source : "789 - Arte y Bellas Artes",
+      target : "791 - Música",
+      type: "licensing"
+    },
+    {
+      source : "585 - Informática e Información",
+      target : "792 - Diseño Digital, Multimedia",
+      type: "licensing"
+    },
+    {
+      source : "681 - Ciencias Agrarias",
+      target : "793 - Ingeniería Agrícola",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "794 - Formación Profesional",
+      type: "licensing"
+    },
+    {
+      source : "794 - Formación Profesional",
+      target : "795 - Enología",
+      type: "licensing"
+    },
+    {
+      source : "759 - Ciencias Agrarias",
+      target : "796 - Ciencias Agrícolas",
+      type: "licensing"
+    },
+    {
+      source : "536 - Programas Empresariales",
+      target : "797 - Administración de Hospitales y Clínicas",
+      type: "licensing"
+    },
+    {
+      source : "562 - Ingeniería y Tecnología",
+      target : "798 - Ingeniería Industrial",
+      type: "licensing"
+    },
+    {
+      source : "592 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "799 - Psicología - Forense",
+      type: "licensing"
+    },
+    {
+      source : "590 - Salud y Medicina",
+      target : "800 - Investigación Médica y de Enfermedades",
+      type: "licensing"
+    },
+    {
+      source : "572 - Riesgos Laborales",
+      target : "801 - Seguridad en el Trabajo",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "802 - Neumología",
+      type: "licensing"
+    },
+    {
+      source : "540 - Hotelería y Turismo",
+      target : "803 - Turismo",
+      type: "licensing"
+    },
+    {
+      source : "749 - Matemáticas y Estadística",
+      target : "804 - Matemáticas, Matemáticas Aplicadas",
+      type: "licensing"
+    },
+    {
+      source : "630 - Educación",
+      target : "805 - Fundamentos de la Educación",
+      type: "licensing"
+    },
+    {
+      source : "731 - Ciencias Sociales y Humanidades",
+      target : "806 - Literatura",
+      type: "licensing"
+    },
+    {
+      source : "731 - Ciencias Sociales y Humanidades",
+      target : "807 - Lenguaje y Literatura Inglesa",
+      type: "licensing"
+    },
+    {
+      source : "562 - Ingeniería y Tecnología",
+      target : "808 - Planificación Urbana y Regional",
+      type: "licensing"
+    },
+    {
+      source : "536 - Programas Empresariales",
+      target : "809 - Auditoría de Calidad",
+      type: "licensing"
+    },
+    {
+      source : "743 - Gestión Medio Ambiente",
+      target : "810 - Energías Renovables y Eficiencia Energética",
+      type: "licensing"
+    },
+    {
+      source : "562 - Ingeniería y Tecnología",
+      target : "811 - Ingeniería Medio Ambiental",
+      type: "licensing"
+    },
+    {
+      source : "536 - Programas Empresariales",
+      target : "812 - Logística",
+      type: "licensing"
+    },
+    {
+      source : "590 - Salud y Medicina",
+      target : "813 - Odontología",
+      type: "licensing"
+    },
+    {
+      source : "671 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "814 - Consejería Matrimonial y Familiar",
+      type: "licensing"
+    },
+    {
+      source : "592 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "815 - Consejería Matrimonial y Familiar",
+      type: "licensing"
+    },
+    {
+      source : "536 - Programas Empresariales",
+      target : "816 - Seguros",
+      type: "licensing"
+    },
+    {
+      source : "536 - Programas Empresariales",
+      target : "817 - Enseñanza de Negocios (Educación)",
+      type: "licensing"
+    },
+    {
+      source : "536 - Programas Empresariales",
+      target : "818 - Recursos Humanos",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "819 - Criminología y Estudios Forenses",
+      type: "licensing"
+    },
+    {
+      source : "819 - Criminología y Estudios Forenses",
+      target : "820 - Criminología",
+      type: "licensing"
+    },
+    {
+      source : "590 - Salud y Medicina",
+      target : "821 - Trabajo Con Personas Con Capacidades Diferentes",
+      type: "licensing"
+    },
+    {
+      source : "755 - Economía y Finanzas",
+      target : "822 - Finanzas",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "823 - Mba",
+      type: "licensing"
+    },
+    {
+      source : "823 - Mba",
+      target : "824 - Liderazgo Estratégico",
+      type: "licensing"
+    },
+    {
+      source : "635 - re Humanos - Rrhh",
+      target : "825 - Relaciones Laborales",
+      type: "licensing"
+    },
+    {
+      source : "747 - Periodismo y Ciencias de la Información",
+      target : "826 - Radio, Televisión y Cinematografía",
+      type: "licensing"
+    },
+    {
+      source : "757 - Gestión Inmobiliaria - Urbanismo",
+      target : "827 - Tasador Inmobiliario",
+      type: "licensing"
+    },
+    {
+      source : "542 - Programas Empresariales",
+      target : "828 - Dirección de Empresas y Negocios (Otros)",
+      type: "licensing"
+    },
+    {
+      source : "823 - Mba",
+      target : "829 - Mba - Master of Business Administration",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "830 - Mba",
+      type: "licensing"
+    },
+    {
+      source : "830 - Mba",
+      target : "831 - Mba - Master of Business Administration",
+      type: "licensing"
+    },
+    {
+      source : "830 - Mba",
+      target : "832 - Liderazgo Estratégico",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "833 - Periodismo y Ciencias de la Información",
+      type: "licensing"
+    },
+    {
+      source : "833 - Periodismo y Ciencias de la Información",
+      target : "834 - Ciencias de la Comunicación",
+      type: "licensing"
+    },
+    {
+      source : "830 - Mba",
+      target : "835 - International Mba",
+      type: "licensing"
+    },
+    {
+      source : "833 - Periodismo y Ciencias de la Información",
+      target : "836 - Radio, Televisión y Cinematografía",
+      type: "licensing"
+    },
+    {
+      source : "789 - Arte y Bellas Artes",
+      target : "837 - Diseño Urbano",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "838 - Urgencias Médicas y Sanitarias",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "839 - Alergia e Inmunología",
+      type: "licensing"
+    },
+    {
+      source : "592 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "840 - Neuropsicología",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "841 - Medio Ambiente y Geología",
+      type: "licensing"
+    },
+    {
+      source : "841 - Medio Ambiente y Geología",
+      target : "842 - Geofísica",
+      type: "licensing"
+    },
+    {
+      source : "546 - Publicidad y Marketing",
+      target : "843 - Merchandising",
+      type: "licensing"
+    },
+    {
+      source : "620 - Ciencias Sociales y Humanidades",
+      target : "844 - Bibliotecas",
+      type: "licensing"
+    },
+    {
+      source : "731 - Ciencias Sociales y Humanidades",
+      target : "845 - Estudios Latinoamericanos",
+      type: "licensing"
+    },
+    {
+      source : "630 - Educación",
+      target : "846 - Medidas, Estadísticas",
+      type: "licensing"
+    },
+    {
+      source : "542 - Programas Empresariales",
+      target : "847 - Business Intelligence",
+      type: "licensing"
+    },
+    {
+      source : "615 - Economía y Finanzas",
+      target : "848 - Dirección y Gestión Bancaria",
+      type: "licensing"
+    },
+    {
+      source : "592 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "849 - Ciencias Sociales",
+      type: "licensing"
+    },
+    {
+      source : "542 - Programas Empresariales",
+      target : "850 - Administración de Hospitales y Clínicas",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "851 - Física y Química",
+      type: "licensing"
+    },
+    {
+      source : "851 - Física y Química",
+      target : "852 - Ciencia - Otras",
+      type: "licensing"
+    },
+    {
+      source : "590 - Salud y Medicina",
+      target : "853 - Epidemiología",
+      type: "licensing"
+    },
+    {
+      source : "731 - Ciencias Sociales y Humanidades",
+      target : "854 - Filosofía",
+      type: "licensing"
+    },
+    {
+      source : "536 - Programas Empresariales",
+      target : "855 - Gestión de Pymes, Pequeñas y Medianas Empresas",
+      type: "licensing"
+    },
+    {
+      source : "590 - Salud y Medicina",
+      target : "856 - Psicología, Salud Mental",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "857 - Empleo Público y Oposiciones",
+      type: "licensing"
+    },
+    {
+      source : "857 - Empleo Público y Oposiciones",
+      target : "858 - Ejército",
+      type: "licensing"
+    },
+    {
+      source : "731 - Ciencias Sociales y Humanidades",
+      target : "859 - Geografía y Cartografía",
+      type: "licensing"
+    },
+    {
+      source : "639 - Empleo Público y Oposiciones",
+      target : "860 - Ejército",
+      type: "licensing"
+    },
+    {
+      source : "560 - Informática e Información",
+      target : "861 - Calidad, Seguridad Informática",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "862 - Administración Hospitalaria",
+      type: "licensing"
+    },
+    {
+      source : "554 - Programas Empresariales",
+      target : "863 - Gestión de Pymes, Pequeñas y Medianas Empresas",
+      type: "licensing"
+    },
+    {
+      source : "643 - Derecho / Leyes",
+      target : "864 - Derecho Internacional",
+      type: "licensing"
+    },
+    {
+      source : "556 - Gestión Medio Ambiente",
+      target : "865 - Estudios Del Medio Ambiente",
+      type: "licensing"
+    },
+    {
+      source : "562 - Ingeniería y Tecnología",
+      target : "866 - Arquitectura",
+      type: "licensing"
+    },
+    {
+      source : "743 - Gestión Medio Ambiente",
+      target : "867 - Estudios Del Medio Ambiente",
+      type: "licensing"
+    },
+    {
+      source : "789 - Arte y Bellas Artes",
+      target : "868 - Estética",
+      type: "licensing"
+    },
+    {
+      source : "719 - Arte y Bellas Artes",
+      target : "869 - Diseño Urbano",
+      type: "licensing"
+    },
+    {
+      source : "590 - Salud y Medicina",
+      target : "870 - Gerontología",
+      type: "licensing"
+    },
+    {
+      source : "637 - Criminología y Estudios Forenses",
+      target : "871 - Estudios Forenses",
+      type: "licensing"
+    },
+    {
+      source : "651 - Derecho / Leyes",
+      target : "872 - Abogacía y Práctica Jurídica",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "873 - Criminología y Estudios Forenses",
+      type: "licensing"
+    },
+    {
+      source : "873 - Criminología y Estudios Forenses",
+      target : "874 - Criminología",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "875 - Nutrición y Alimentación",
+      type: "licensing"
+    },
+    {
+      source : "875 - Nutrición y Alimentación",
+      target : "876 - Hostelería",
+      type: "licensing"
+    },
+    {
+      source : "542 - Programas Empresariales",
+      target : "877 - Seguros",
+      type: "licensing"
+    },
+    {
+      source : "572 - Riesgos Laborales",
+      target : "878 - Prevención de Riesgos Laborales",
+      type: "licensing"
+    },
+    {
+      source : "717 - Arte y Bellas Artes",
+      target : "879 - Arte",
+      type: "licensing"
+    },
+    {
+      source : "717 - Arte y Bellas Artes",
+      target : "880 - Danza",
+      type: "licensing"
+    },
+    {
+      source : "667 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "881 - Psicología - Clínica",
+      type: "licensing"
+    },
+    {
+      source : "731 - Ciencias Sociales y Humanidades",
+      target : "882 - LingüÍStica",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "883 - Deportes y Educación",
+      type: "licensing"
+    },
+    {
+      source : "883 - Deportes y Educación",
+      target : "884 - Educación Física",
+      type: "licensing"
+    },
+    {
+      source : "731 - Ciencias Sociales y Humanidades",
+      target : "885 - Historia",
+      type: "licensing"
+    },
+    {
+      source : "731 - Ciencias Sociales y Humanidades",
+      target : "886 - Enseñanza de Lenguajes",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "887 - Idiomas",
+      type: "licensing"
+    },
+    {
+      source : "887 - Idiomas",
+      target : "888 - Español Para Extranjeros",
+      type: "licensing"
+    },
+    {
+      source : "667 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "889 - Desarrollo Infantil",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "890 - Matemáticas y Estadística",
+      type: "licensing"
+    },
+    {
+      source : "890 - Matemáticas y Estadística",
+      target : "891 - Estadística",
+      type: "licensing"
+    },
+    {
+      source : "560 - Informática e Información",
+      target : "892 - Tecnología Educativa",
+      type: "licensing"
+    },
+    {
+      source : "696 - Deportes y Educación",
+      target : "893 - Educación Física",
+      type: "licensing"
+    },
+    {
+      source : "623 - Ciencias Sociales y Humanidades",
+      target : "894 - Filosofía",
+      type: "licensing"
+    },
+    {
+      source : "536 - Programas Empresariales",
+      target : "895 - Dirección de Empresas y Negocios (Otros)",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "896 - Recursos Humanos - Rrhh",
+      type: "licensing"
+    },
+    {
+      source : "896 - Recursos Humanos - Rrhh",
+      target : "897 - Relaciones Laborales",
+      type: "licensing"
+    },
+    {
+      source : "592 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "898 - Psiquiatría",
+      type: "licensing"
+    },
+    {
+      source : "590 - Salud y Medicina",
+      target : "899 - Cardiología",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "900 - Ciencias Médicas",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "901 - Reumatología",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "902 - Dermatología",
+      type: "licensing"
+    },
+    {
+      source : "585 - Informática e Información",
+      target : "903 - Redes Informáticas",
+      type: "licensing"
+    },
+    {
+      source : "552 - Ingeniería y Tecnología",
+      target : "904 - Planificación Urbana y Regional",
+      type: "licensing"
+    },
+    {
+      source : "717 - Arte y Bellas Artes",
+      target : "905 - Diseño Urbano",
+      type: "licensing"
+    },
+    {
+      source : "620 - Ciencias Sociales y Humanidades",
+      target : "906 - Estudios Latinoamericanos",
+      type: "licensing"
+    },
+    {
+      source : "592 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "907 - Psicoterapia",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "908 - Visitador Médico",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "909 - Educación Sanitaria",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "910 - Enfermería",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "911 - Enfermería",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "912 - Administración Hospitalaria",
+      type: "licensing"
+    },
+    {
+      source : "590 - Salud y Medicina",
+      target : "913 - Dirección y Gestión de Centros y Servicios de Atención a la Tercera Edad",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "914 - Osteopatología",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "915 - Endocrinología y Metabolismo",
+      type: "licensing"
+    },
+    {
+      source : "562 - Ingeniería y Tecnología",
+      target : "916 - Ingeniería Biomédica",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "917 - Neumología",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "918 - Física Médica y Radiología",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "919 - Demencias y Enfermedad de Alzheimer",
+      type: "licensing"
+    },
+    {
+      source : "667 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "920 - Psicología - Cognitiva",
+      type: "licensing"
+    },
+    {
+      source : "667 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "921 - Neurociencia",
+      type: "licensing"
+    },
+    {
+      source : "671 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "922 - Orientación y Terapia Familiar",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "923 - Medicina",
+      type: "licensing"
+    },
+    {
+      source : "590 - Salud y Medicina",
+      target : "924 - Oncología",
+      type: "licensing"
+    },
+    {
+      source : "667 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "925 - Psicología - Aplicada",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "926 - Psicología, Salud Mental",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "927 - Nutrición",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "928 - Infectología",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "929 - Terapias Alternativas",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "930 - Infectología",
+      type: "licensing"
+    },
+    {
+      source : "560 - Informática e Información",
+      target : "931 - Diseño Digital, Multimedia",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "932 - Salud Sexual y Reproductiva",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "933 - Medio Ambiente y Geología",
+      type: "licensing"
+    },
+    {
+      source : "933 - Medio Ambiente y Geología",
+      target : "934 - Dirección Medio Ambiental",
+      type: "licensing"
+    },
+    {
+      source : "667 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "935 - Orientación y Terapia Familiar",
+      type: "licensing"
+    },
+    {
+      source : "667 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "936 - Psicoterapia",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "937 - Gerontología",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "938 - Terapias Alternativas",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "939 - Terapia Física",
+      type: "licensing"
+    },
+    {
+      source : "590 - Salud y Medicina",
+      target : "940 - Salud Pública",
+      type: "licensing"
+    },
+    {
+      source : "552 - Ingeniería y Tecnología",
+      target : "941 - Arquitectura",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "942 - Física y Química",
+      type: "licensing"
+    },
+    {
+      source : "942 - Física y Química",
+      target : "943 - Bioquímica",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "944 - Ciencias Biomédicas",
+      type: "licensing"
+    },
+    {
+      source : "651 - Derecho / Leyes",
+      target : "945 - Derecho Laboral y Seguridad Social",
+      type: "licensing"
+    },
+    {
+      source : "554 - Programas Empresariales",
+      target : "946 - Comercio Internacional",
+      type: "licensing"
+    },
+    {
+      source : "620 - Ciencias Sociales y Humanidades",
+      target : "947 - Género",
+      type: "licensing"
+    },
+    {
+      source : "546 - Publicidad y Marketing",
+      target : "948 - Relaciones Públicas",
+      type: "licensing"
+    },
+    {
+      source : "731 - Ciencias Sociales y Humanidades",
+      target : "949 - Antropología",
+      type: "licensing"
+    },
+    {
+      source : "696 - Deportes y Educación",
+      target : "950 - Enseñanza de Otros Temas",
+      type: "licensing"
+    },
+    {
+      source : "753 - Idiomas",
+      target : "951 - Italiano",
+      type: "licensing"
+    },
+    {
+      source : "753 - Idiomas",
+      target : "952 - Francés",
+      type: "licensing"
+    },
+    {
+      source : "753 - Idiomas",
+      target : "953 - Portugués",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "954 - Idiomas",
+      type: "licensing"
+    },
+    {
+      source : "954 - Idiomas",
+      target : "955 - Español Para Extranjeros",
+      type: "licensing"
+    },
+    {
+      source : "731 - Ciencias Sociales y Humanidades",
+      target : "956 - Literatura Comparativa",
+      type: "licensing"
+    },
+    {
+      source : "696 - Deportes y Educación",
+      target : "957 - Educación Secundaria",
+      type: "licensing"
+    },
+    {
+      source : "554 - Programas Empresariales",
+      target : "958 - Ciencias Experimentales: Microbiologia / Biotecnologia",
+      type: "licensing"
+    },
+    {
+      source : "536 - Programas Empresariales",
+      target : "959 - Ciencias Experimentales: Microbiologia / Biotecnologia",
+      type: "licensing"
+    },
+    {
+      source : "562 - Ingeniería y Tecnología",
+      target : "960 - Ingeniería de Sistemas",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "961 - Nutrición y Alimentación",
+      type: "licensing"
+    },
+    {
+      source : "961 - Nutrición y Alimentación",
+      target : "962 - Dietética y Nutrición",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "963 - Hematología",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "964 - Ciencias Sanitarias (Varias)",
+      type: "licensing"
+    },
+    {
+      source : "592 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "965 - Psicología Educativa",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "966 - Farmacología",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "967 - Ciencias Biológicas",
+      type: "licensing"
+    },
+    {
+      source : "967 - Ciencias Biológicas",
+      target : "968 - Botánica",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "969 - Ciencias Experimentales",
+      type: "licensing"
+    },
+    {
+      source : "969 - Ciencias Experimentales",
+      target : "970 - Microbiología/Biotecnología",
+      type: "licensing"
+    },
+    {
+      source : "587 - Informática e Información",
+      target : "971 - Sistemas de Información",
+      type: "licensing"
+    },
+    {
+      source : "556 - Gestión Medio Ambiente",
+      target : "972 - Ciencia Del Medio Ambiente",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "973 - Nutrición y Alimentación",
+      type: "licensing"
+    },
+    {
+      source : "973 - Nutrición y Alimentación",
+      target : "974 - Dietética y Nutrición",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "975 - Publicidad y Marketing",
+      type: "licensing"
+    },
+    {
+      source : "975 - Publicidad y Marketing",
+      target : "976 - Comercial y Ventas",
+      type: "licensing"
+    },
+    {
+      source : "942 - Física y Química",
+      target : "977 - Ciencia - Otras",
+      type: "licensing"
+    },
+    {
+      source : "630 - Educación",
+      target : "978 - Administración Educativa",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "979 - Veterinaria",
+      type: "licensing"
+    },
+    {
+      source : "979 - Veterinaria",
+      target : "980 - Auxiliar Clínico Veterinario",
+      type: "licensing"
+    },
+    {
+      source : "556 - Gestión Medio Ambiente",
+      target : "981 - Contaminación Atmosférica",
+      type: "licensing"
+    },
+    {
+      source : "667 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "982 - Ciencias Sociales",
+      type: "licensing"
+    },
+    {
+      source : "975 - Publicidad y Marketing",
+      target : "983 - Relaciones Públicas",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "984 - Hotelería y Turismo",
+      type: "licensing"
+    },
+    {
+      source : "984 - Hotelería y Turismo",
+      target : "985 - Dirección y Gestión de Empresas Turísticas",
+      type: "licensing"
+    },
+    {
+      source : "562 - Ingeniería y Tecnología",
+      target : "986 - Ingeniería Química",
+      type: "licensing"
+    },
+    {
+      source : "734 - Física y Química",
+      target : "987 - Química",
+      type: "licensing"
+    },
+    {
+      source : "696 - Deportes y Educación",
+      target : "988 - Administración Educativa",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "989 - Administración Enfermería",
+      type: "licensing"
+    },
+    {
+      source : "536 - Programas Empresariales",
+      target : "990 - Estudios Internacionales",
+      type: "licensing"
+    },
+    {
+      source : "830 - Mba",
+      target : "991 - Mba Executive",
+      type: "licensing"
+    },
+    {
+      source : "552 - Ingeniería y Tecnología",
+      target : "992 - Ingeniería Química",
+      type: "licensing"
+    },
+    {
+      source : "552 - Ingeniería y Tecnología",
+      target : "993 - Ingeniería de Fabricación",
+      type: "licensing"
+    },
+    {
+      source : "623 - Ciencias Sociales y Humanidades",
+      target : "994 - Lenguaje y Literatura Inglesa",
+      type: "licensing"
+    },
+    {
+      source : "623 - Ciencias Sociales y Humanidades",
+      target : "995 - Enseñanza de Lenguajes",
+      type: "licensing"
+    },
+    {
+      source : "731 - Ciencias Sociales y Humanidades",
+      target : "996 - Religión",
+      type: "licensing"
+    },
+    {
+      source : "722 - Riesgos Laborales",
+      target : "997 - Calidad y Seguridad",
+      type: "licensing"
+    },
+    {
+      source : "49 - Carreras",
+      target : "998 - Periodismo y Ciencias de la Información",
+      type: "licensing"
+    },
+    {
+      source : "998 - Periodismo y Ciencias de la Información",
+      target : "999 - Comunicaciones",
+      type: "licensing"
+    },
+    {
+      source : "554 - Programas Empresariales",
+      target : "1000 - Gestión Pública",
+      type: "licensing"
+    },
+    {
+      source : "552 - Ingeniería y Tecnología",
+      target : "1001 - Ingeniería Medio Ambiental",
+      type: "licensing"
+    },
+    {
+      source : "150 - Maestrías",
+      target : "1002 - Hotelería y Turismo",
+      type: "licensing"
+    },
+    {
+      source : "1002 - Hotelería y Turismo",
+      target : "1003 - Turismo",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "1004 - Formación Profesional",
+      type: "licensing"
+    },
+    {
+      source : "1004 - Formación Profesional",
+      target : "1005 - Alimentación",
+      type: "licensing"
+    },
+    {
+      source : "590 - Salud y Medicina",
+      target : "1006 - Farmacéutico",
+      type: "licensing"
+    },
+    {
+      source : "146 - Posgrados",
+      target : "1007 - Gestión Inmobiliaria - Urbanismo",
+      type: "licensing"
+    },
+    {
+      source : "1007 - Gestión Inmobiliaria - Urbanismo",
+      target : "1008 - Gestión Inmobiliaria",
+      type: "licensing"
+    },
+    {
+      source : "623 - Ciencias Sociales y Humanidades",
+      target : "1009 - Estudios Latinoamericanos",
+      type: "licensing"
+    },
+    {
+      source : "536 - Programas Empresariales",
+      target : "1010 - Desarrollo Directivo",
+      type: "licensing"
+    },
+    {
+      source : "967 - Ciencias Biológicas",
+      target : "1011 - Biología",
+      type: "licensing"
+    },
+    {
+      source : "542 - Programas Empresariales",
+      target : "1012 - Recursos Humanos",
+      type: "licensing"
+    },
+    {
+      source : "671 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "1013 - Ciencias Sociales",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "1014 - Farmacéutico",
+      type: "licensing"
+    },
+    {
+      source : "753 - Idiomas",
+      target : "1015 - Español",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "1016 - Epidemiología",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "1017 - Salud Pública",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "1018 - Ginecología y Obstetricia",
+      type: "licensing"
+    },
+    {
+      source : "590 - Salud y Medicina",
+      target : "1019 - ÓPtica, Ciencias Oftalmológicas",
+      type: "licensing"
+    },
+    {
+      source : "696 - Deportes y Educación",
+      target : "1020 - Educación Infantil Guardería",
+      type: "licensing"
+    },
+    {
+      source : "592 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "1021 - Psicología - Cognitiva",
+      type: "licensing"
+    },
+    {
+      source : "696 - Deportes y Educación",
+      target : "1022 - Instrucción y Currículum",
+      type: "licensing"
+    },
+    {
+      source : "833 - Periodismo y Ciencias de la Información",
+      target : "1023 - Comunicaciones",
+      type: "licensing"
+    },
+    {
+      source : "554 - Programas Empresariales",
+      target : "1024 - Desarrollo Económico",
+      type: "licensing"
+    },
+    {
+      source : "623 - Ciencias Sociales y Humanidades",
+      target : "1025 - Antropología",
+      type: "licensing"
+    },
+    {
+      source : "671 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "1026 - Psicología Educativa",
+      type: "licensing"
+    },
+    {
+      source : "770 - Ciencias Agrarias",
+      target : "1027 - Ciencias Gastronómicas",
+      type: "licensing"
+    },
+    {
+      source : "49 - Carreras",
+      target : "1028 - Programas Empresariales",
+      type: "licensing"
+    },
+    {
+      source : "1028 - Programas Empresariales",
+      target : "1029 - Administración de Empresas",
+      type: "licensing"
+    },
+    {
+      source : "984 - Hotelería y Turismo",
+      target : "1030 - Guía Turístico",
+      type: "licensing"
+    },
+    {
+      source : "49 - Carreras",
+      target : "1031 - Hotelería y Turismo",
+      type: "licensing"
+    },
+    {
+      source : "1031 - Hotelería y Turismo",
+      target : "1032 - Guía Turístico",
+      type: "licensing"
+    },
+    {
+      source : "562 - Ingeniería y Tecnología",
+      target : "1033 - Innovación Tecnológica",
+      type: "licensing"
+    },
+    {
+      source : "49 - Carreras",
+      target : "1034 - Informática e Información",
+      type: "licensing"
+    },
+    {
+      source : "1034 - Informática e Información",
+      target : "1035 - Tecnología de la Información",
+      type: "licensing"
+    },
+    {
+      source : "1034 - Informática e Información",
+      target : "1036 - Sistemas de Información",
+      type: "licensing"
+    },
+    {
+      source : "49 - Carreras",
+      target : "1037 - Riesgos Laborales",
+      type: "licensing"
+    },
+    {
+      source : "1037 - Riesgos Laborales",
+      target : "1038 - Seguridad en el Trabajo",
+      type: "licensing"
+    },
+    {
+      source : "49 - Carreras",
+      target : "1039 - Ingeniería y Tecnología",
+      type: "licensing"
+    },
+    {
+      source : "1039 - Ingeniería y Tecnología",
+      target : "1040 - Mantenimiento Industrial",
+      type: "licensing"
+    },
+    {
+      source : "1039 - Ingeniería y Tecnología",
+      target : "1041 - Ingeniería Mecánica",
+      type: "licensing"
+    },
+    {
+      source : "1039 - Ingeniería y Tecnología",
+      target : "1042 - Ingeniería Industrial",
+      type: "licensing"
+    },
+    {
+      source : "1039 - Ingeniería y Tecnología",
+      target : "1043 - Ingeniería Medio Ambiental",
+      type: "licensing"
+    },
+    {
+      source : "49 - Carreras",
+      target : "1044 - Formación Profesional",
+      type: "licensing"
+    },
+    {
+      source : "1044 - Formación Profesional",
+      target : "1045 - Alimentación",
+      type: "licensing"
+    },
+    {
+      source : "1034 - Informática e Información",
+      target : "1046 - Programación",
+      type: "licensing"
+    },
+    {
+      source : "623 - Ciencias Sociales y Humanidades",
+      target : "2193 - humanidades",
+      type: "licensing"
+    },
+    {
+      source : "1047 - NULL",
+      target : "1048 - Seguridad Civil",
+      type: "licensing"
+    },
+    {
+      source : "833 - Periodismo y Ciencias de la Información",
+      target : "1049 - Periodismo",
+      type: "licensing"
+    },
+    {
+      source : "562 - Ingeniería y Tecnología",
+      target : "1050 - Automatización Industrial",
+      type: "licensing"
+    },
+    {
+      source : "552 - Ingeniería y Tecnología",
+      target : "1051 - Gerencia",
+      type: "licensing"
+    },
+    {
+      source : "1044 - Formación Profesional",
+      target : "1052 - Enología",
+      type: "licensing"
+    },
+    {
+      source : "585 - Informática e Información",
+      target : "1053 - Dreamweaver (Macromedia)",
+      type: "licensing"
+    },
+    {
+      source : "585 - Informática e Información",
+      target : "1054 - Flash, Action Script",
+      type: "licensing"
+    },
+    {
+      source : "585 - Informática e Información",
+      target : "1055 - Ajax",
+      type: "licensing"
+    },
+    {
+      source : "585 - Informática e Información",
+      target : "1056 - Asp (Visual Basic Script)",
+      type: "licensing"
+    },
+    {
+      source : "585 - Informática e Información",
+      target : "1057 - Java y Javascript",
+      type: "licensing"
+    },
+    {
+      source : "585 - Informática e Información",
+      target : "1058 - Diseño Web",
+      type: "licensing"
+    },
+    {
+      source : "585 - Informática e Información",
+      target : "1059 - Diseño Cad-Cam Autocad y Autoarq",
+      type: "licensing"
+    },
+    {
+      source : "546 - Publicidad y Marketing",
+      target : "1060 - Atención al Cliente",
+      type: "licensing"
+    },
+    {
+      source : "585 - Informática e Información",
+      target : "1061 - Reparación y Mantenimiento de Computadores",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "1062 - Calidad",
+      type: "licensing"
+    },
+    {
+      source : "1062 - Calidad",
+      target : "1063 - Gestión de Calidad",
+      type: "licensing"
+    },
+    {
+      source : "546 - Publicidad y Marketing",
+      target : "1064 - Atención Telefónica",
+      type: "licensing"
+    },
+    {
+      source : "635 - re Humanos - Rrhh",
+      target : "1065 - Gestión de Personal",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "1066 - Formación Profesional",
+      type: "licensing"
+    },
+    {
+      source : "1066 - Formación Profesional",
+      target : "1067 - Alimentación",
+      type: "licensing"
+    },
+    {
+      source : "585 - Informática e Información",
+      target : "1068 - Microsoft",
+      type: "licensing"
+    },
+    {
+      source : "585 - Informática e Información",
+      target : "1069 - Visual Basic (Visualbasic)",
+      type: "licensing"
+    },
+    {
+      source : "585 - Informática e Información",
+      target : "1070 - Programación Sql",
+      type: "licensing"
+    },
+    {
+      source : "548 - Educación Ejecutiva Programas Empresariales",
+      target : "1071 - e-Learning",
+      type: "licensing"
+    },
+    {
+      source : "719 - Arte y Bellas Artes",
+      target : "1072 - Diseño Gráfico",
+      type: "licensing"
+    },
+    {
+      source : "585 - Informática e Información",
+      target : "1073 - Corel Draw",
+      type: "licensing"
+    },
+    {
+      source : "776 - Ciencias Biológicas",
+      target : "1074 - Botánica",
+      type: "licensing"
+    },
+    {
+      source : "583 - Gestión Medio Ambiente",
+      target : "1075 - Ciencia Del Medio Ambiente",
+      type: "licensing"
+    },
+    {
+      source : "536 - Programas Empresariales",
+      target : "1076 - Gestión Inmobiliaria Para Empresas",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "1077 - Ciencias de Laboratorio Clínico",
+      type: "licensing"
+    },
+    {
+      source : "667 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "1078 - Adicciones",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "1079 - Habilidades Personales",
+      type: "licensing"
+    },
+    {
+      source : "1079 - Habilidades Personales",
+      target : "1080 - Oratoria",
+      type: "licensing"
+    },
+    {
+      source : "671 - Psicología y Ciencias Sociales y de Comportamiento",
+      target : "1081 - Ciencias Del Comportamiento",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "1082 - Neurología",
+      type: "licensing"
+    },
+    {
+      source : "570 - Salud y Medicina",
+      target : "1083 - Pediatría y Puericultura",
+      type: "licensing"
+    },
+    {
+      source : "685 - Salud y Medicina",
+      target : "1084 - Fisioterapia",
+      type: "licensing"
+    },
+    {
+      source : "49 - Carreras",
+      target : "1085 - Nutrición y Alimentación",
+      type: "licensing"
+    },
+    {
+      source : "1085 - Nutrición y Alimentación",
+      target : "1086 - Hostelería",
+      type: "licensing"
+    },
+    {
+      source : "49 - Carreras",
+      target : "1087 - Recursos Humanos - Rrhh",
+      type: "licensing"
+    },
+    {
+      source : "1087 - Recursos Humanos - Rrhh",
+      target : "1088 - Dirección y Gestión de Recursos Humanos",
+      type: "licensing"
+    },
+    {
+      source : "49 - Carreras",
+      target : "1089 - Publicidad y Marketing",
+      type: "licensing"
+    },
+    {
+      source : "1089 - Publicidad y Marketing",
+      target : "1090 - Marketing Estratégico",
+      type: "licensing"
+    },
+    {
+      source : "608 - Recursos Humanos - Rrhh",
+      target : "1091 - Relaciones Laborales",
+      type: "licensing"
+    },
+    {
+      source : "1079 - Habilidades Personales",
+      target : "1092 - Coaching Transformacional",
+      type: "licensing"
+    },
+    {
+      source : "1079 - Habilidades Personales",
+      target : "1093 - Habilidades Personales - Pnl",
+      type: "licensing"
+    },
+    {
+      source : "542 - Programas Empresariales",
+      target : "1094 - Administración de Empresas",
+      type: "licensing"
+    },
+    {
+      source : "542 - Programas Empresariales",
+      target : "1095 - Estudios de Organización",
+      type: "licensing"
+    },
+    {
+      source : "542 - Programas Empresariales",
+      target : "1096 - Publicidad y Relaciones Públicas",
+      type: "licensing"
+    },
+    {
+      source : "585 - Informática e Información",
+      target : "1097 - Adobe Photoshop",
+      type: "licensing"
+    },
+    {
+      source : "107 - Cursos",
+      target : "1098 - Imagen y Sonido",
+      type: "licensing"
+    },
+    {
+      source : "1098 - Imagen y Sonido",
+      target : "1099 - Cine",
+      type: "licensing"
+    },
+    {
+      source : "585 - Informática e Información",
+      target : "1100 - 3d",
+      type: "licensing"
+    },
+    {
+      source : "635 - re Humanos - Rrhh",
+      target : "1101 - Auditoría de re Humanos",
+      type: "licensing"
+    },
+    {
+      source : "719 - Arte y Bellas Artes",
+      target : "1102 - Arte",
+      type: "licensing"
+    },
+    {
+      source : "1089 - Publicidad y Marketing",
+      target : "1103 - Organizador de Eventos",
+      type: "licensing"
+    },
+    {
+      source : "49 - Carreras",
+      target : "1104 - Arte y Bellas Artes",
+      type: "licensing"
+    },
+    {
+      source : "1104 - Arte y Bellas Artes",
+      target : "1105 - Estética",
+      type: "licensing"
+    },
+    {
+      source : "719 - Arte y Bellas Artes",
+      target : "1106 - Gestión de Exposiciones",
+      type: "licensing"
+    },
+    {
+      source : "49 - Carreras",
+      target : "1107 - Salud y Medicina",
+      type: "licensing"
+    },
+    {
+      source : "1107 - Salud y Medicina",
+      target : "1108 - Salud Pública",
+      type: "licensing"
+    },
+    {
+      source : "719 - Arte y Bellas Artes",
+      target : "1109 - Estética",
+      type: "licensing"
+    },
+    {
+      source : "49 - Carreras",
+      target : "1110 - Ciencias Agrarias",
+      type: "licensing"
+    },
+    {
+      source : "1110 - Ciencias Agrarias",
+      target : "1111 - Ciencias Gastronómicas",
+      type: "licensing"
+    },
+    {
+      source : "1066 - Formación Profesional",
+      target : "1112 - Enología",
+      type: "licensing"
+    }
+  ];
+
+var nodes = {};
+
+// Compute the distinct nodes from the links.
+links.forEach(function(link) {
+  link.source = nodes[link.source] || (nodes[link.source] = {name: link.source});
+  link.target = nodes[link.target] || (nodes[link.target] = {name: link.target});
+});
+
+var width = 4000,
+    height = 5000;
+
+var force = d3.layout.force()
+    .nodes(d3.values(nodes))
+    .links(links)
+    .size([width, height])
+    .linkDistance(60)
+    .charge(-300)
+    .on("tick", tick)
+    .start();
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+// Per-type markers, as they don't inherit styles.
+svg.append("defs").selectAll("marker")
+    .data(["suit", "licensing", "resolved"])
+  .enter().append("marker")
+    .attr("id", function(d) { return d; })
+    .attr("viewBox", "0 -5 10 10")
+    .attr("refX", 15)
+    .attr("refY", -1.5)
+    .attr("markerWidth", 6)
+    .attr("markerHeight", 6)
+    .attr("orient", "auto")
+  .append("path")
+    .attr("d", "M0,-5L10,0L0,5");
+
+var path = svg.append("g").selectAll("path")
+    .data(force.links())
+  .enter().append("path")
+    .attr("class", function(d) { return "link " + d.type; })
+    .attr("marker-end", function(d) { return "url(#" + d.type + ")"; });
+
+var circle = svg.append("g").selectAll("circle")
+    .data(force.nodes())
+  .enter().append("circle")
+    .attr("r", 6)
+    .call(force.drag);
+
+var text = svg.append("g").selectAll("text")
+    .data(force.nodes())
+  .enter().append("text")
+    .attr("x", 8)
+    .attr("y", ".31em")
+    .text(function(d) { return d.name; });
+
+// Use elliptical arc path segments to doubly-encode directionality.
+function tick() {
+  path.attr("d", linkArc);
+  circle.attr("transform", transform);
+  text.attr("transform", transform);
+}
+
+function linkArc(d) {
+  var dx = d.target.x - d.source.x,
+      dy = d.target.y - d.source.y,
+      dr = Math.sqrt(dx * dx + dy * dy);
+  return "M" + d.source.x + "," + d.source.y + "A" + dr + "," + dr + " 0 0,1 " + d.target.x + "," + d.target.y;
+}
+
+function transform(d) {
+  return "translate(" + d.x + "," + d.y + ")";
+}
+
+</script>
